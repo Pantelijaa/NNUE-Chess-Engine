@@ -1,5 +1,5 @@
 import chess
-from state.ChessState import ChessState
+from state.chess_state import ChessState
 
 
 class HandCraftedState(ChessState):
