@@ -4,11 +4,11 @@ import chess
 
 class ChessState(ABC):
     @abstractmethod
-    def __init__(self, board: chess.Board, parent=None, move=None):
-        self.parent: ChessState  = parent
-        self.move: chess.Move = move
+    def __init__(self, board, parent=None, move=None):
+        self.parent = parent
+        self.move = move
         if parent is None:
-            self.board: chess.Board = board.copy()
+            self.board = board.copy()
             self.depth: int = 0
         else:
             self.board = parent.board.copy()
