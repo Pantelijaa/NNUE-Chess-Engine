@@ -86,7 +86,7 @@ class HandCraftedState(ChessState):
 
     def get_eval_score(self) -> float:
         if self.board.is_checkmate():
-            return -9999 if self.board.turn == chess.WHITE else 9999
+            return 9999 if self.board.turn == chess.WHITE else -9999
         if self.board.is_stalemate() or self.board.is_insufficient_material():
             return 0
 
@@ -94,7 +94,7 @@ class HandCraftedState(ChessState):
 
         score += self._eval_material_value()
         score += self._eval_piece_value(chess.PAWN, self.PAWN_TABLE)
-        score += self._eval_piece_value(chess.KNIGHT, self.KING_TABLE)
+        score += self._eval_piece_value(chess.KNIGHT, self.KNIGHT_TABLE)
         score += self._eval_piece_value(chess.BISHOP, self.BISHOP_TABLE)
         score += self._eval_piece_value(chess.ROOK, self.ROOK_TABLE)
         score += self._eval_piece_value(chess.QUEEN, self.QUEEN_TABLE)
