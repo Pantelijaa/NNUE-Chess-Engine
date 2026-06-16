@@ -1,7 +1,7 @@
-from tournament import Tournament
+import tkinter as tk
+from ui import ChessTournamentGUI
 
 if __name__ == '__main__':
-    Tournament = Tournament()
-    Tournament.play_game(white_name='Handcrafted', black_name='Handcrafted')
-
-
+    root = tk.Tk()
+    app = ChessTournamentGUI(root)
+    root.mainloop()

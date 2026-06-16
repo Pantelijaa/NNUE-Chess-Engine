@@ -9,8 +9,8 @@ from . import ChessSearch
 TT_SCORE = 10_000 # Transposition table hit
 PROMOTION_SCORE = 8_000 # Promocija pijuna
 MVV_LVA_BASE = 5_000 # Most Valuable Victim - Least Valuable Attacker
-KILLER_1_SCORE = 900 # Killer potez slot 1
-KILLER_2_SCORE = 800 # Killer potez slot 2
+KILLER_1_SCORE = 1_400 # Killer potez slot 1
+KILLER_2_SCORE = 1_200 # Killer potez slot 2
 
 PIECE_VALUES = {
     chess.PAWN: 100,
@@ -18,7 +18,7 @@ PIECE_VALUES = {
     chess.BISHOP: 330,
     chess.ROOK: 500,
     chess.QUEEN: 900,
-    chess.KING: 10000,
+    chess.KING: 10_000,
 }
 
 
@@ -37,6 +37,7 @@ class PVSSearch(ChessSearch):
 
     def best_move(self, board: chess.Board, state_class):
         self._reset_statistics()
+        self._tt.clear()
         start = time.time()
 
         best_move = list(board.legal_moves)[0]
@@ -108,12 +109,19 @@ class PVSSearch(ChessSearch):
         if time.time() - start >= self.time_limit:
             raise TimeoutError
 
+        in_check = state.board.is_check()
+        if in_check:
+            depth += 1
+
         tt_entry = self._lookup_tt(state.board)
         if tt_entry and tt_entry["depth"] >= depth:
             self.tt_hits += 1
             return tt_entry["score"]
 
-        if depth == 0 or state.is_final_state():
+        if depth <= 0:
+            return self._quiescence(state, alpha, beta, start)
+
+        if state.is_final_state():
             return state.get_eval_score()
 
         tt_move = tt_entry["best_move"] if tt_entry else None
@@ -156,6 +164,40 @@ class PVSSearch(ChessSearch):
 
         return  best_score
 
+    def _quiescence(self, state, alpha: float, beta: float, start: float) -> float:
+        if time.time() - start >= self.time_limit:
+            raise TimeoutError
+
+        stand_pat = state.get_eval_score()
+        maximizing = state.board.turn == chess.WHITE
+
+        if maximizing:
+            if stand_pat >= beta:
+                return beta
+            alpha = max(alpha, stand_pat)
+
+            for move in state.board.generate_legal_moves(chess.BB_ALL, state.board.occupied_co[chess.BLACK]):
+                next_state = state.__class__(state.board, parent=state, move=move)
+                score = self._quiescence(next_state, alpha, beta, start)
+
+                if score >= beta:
+                    return beta
+                alpha = max(alpha, score)
+            return alpha
+        else:
+            if stand_pat <= alpha:
+                return alpha
+            beta = min(beta, stand_pat)
+
+            for move in state.board.generate_legal_moves(chess.BB_ALL, state.board.occupied_co[chess.WHITE]):
+                next_state = state.__class__(state.board, parent=state, move=move)
+                score = self._quiescence(next_state, alpha, beta, start)
+
+                if score <= alpha:
+                    return alpha
+                beta = min(beta, score)
+            return beta
+
     # MOVE ORDERING
 
     def _order_moves(self, board: chess.Board, depth: int, tt_move: Optional[chess.Move]) -> list[chess.Move]:
@@ -190,6 +232,11 @@ class PVSSearch(ChessSearch):
                 return KILLER_1_SCORE
             if move == self._killer[depth][1]:
                 return KILLER_2_SCORE
+
+        moving_piece = board.piece_at(move.from_square)
+        if moving_piece and moving_piece.piece_type == chess.PAWN:
+            is_center_file = chess.square_file(move.to_square) in [2, 3, 4, 5]
+            return 800 + (100 if is_center_file else 0)
 
         return min(self._history[move.uci()], 700)
 
