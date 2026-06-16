@@ -97,10 +97,8 @@ class HandCraftedState(ChessState):
 
     def get_eval_score(self) -> float:
         if self.board.is_checkmate():
-            if self.board.turn == chess.WHITE:
-                return 9999 - self.depth
-            else:
-                return -9999 + self.depth
+            return -9999 + self.depth
+        
         if self.board.is_stalemate() or self.board.is_insufficient_material():
             return 0
 
