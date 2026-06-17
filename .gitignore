@@ -286,4 +286,8 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+# Stockfish
+stockfish/
+stockfish_models/
+
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm

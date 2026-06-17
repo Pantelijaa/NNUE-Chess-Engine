@@ -84,7 +84,7 @@ class PVSSearch(ChessSearch):
                     if alpha < score < beta:
                         score = -self._pvs(state, depth - 1, -beta, -alpha, start)
             finally:
-                board.pop()  # Garantuje vraćanje stanja table pri tajmautu
+                board.pop()
 
             if score > best_score:
                 best_score = score
