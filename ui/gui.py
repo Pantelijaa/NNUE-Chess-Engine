@@ -41,7 +41,7 @@ class ChessTournamentGUI:
         tk.Label(control_frame, text="White:", fg="white", bg="#312e2b", font=("Arial", 10, "bold")).grid(row=0,
                                                                                                           column=0,
                                                                                                           padx=5)
-        self.white_menu = tk.StringVar(value="Handcrafted")
+        self.white_menu = tk.StringVar(value="MCTS")
         tk.OptionMenu(control_frame, self.white_menu, *agent_map.keys()).grid(row=0, column=1, padx=5)
 
         tk.Label(control_frame, text="Black:", fg="white", bg="#312e2b", font=("Arial", 10, "bold")).grid(row=0,
@@ -122,7 +122,7 @@ class ChessTournamentGUI:
                 move = white_agent.best_move(self.board, w_state)
             else:
                 move = black_agent.best_move(self.board, b_state)
-
+            print(white_agent.get_statistics())
             # Safely play move onto visualization board tracking instance
             self.board.push(move)
 

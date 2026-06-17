@@ -1,10 +1,11 @@
 import chess
 
-from search import PVSSearch
+from search import PVSSearch, MCTSSearch
 from state import HandCraftedState
 
 agent_map = {
-    "Handcrafted": (PVSSearch , HandCraftedState)
+    "Handcrafted": (PVSSearch , HandCraftedState),
+    "MCTS": (MCTSSearch, None)
 }
 
 class Tournament:

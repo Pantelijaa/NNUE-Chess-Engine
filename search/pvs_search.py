@@ -55,7 +55,7 @@ class PVSSearch(ChessSearch):
                 break
             depth += 1
 
-        self.time_limit = time.time() - start
+        self.time_elapsed = time.time() - start
         return best_move
 
     def _root_search(self, board, state_class, depth: int, start) -> tuple[float, chess.Move | None]:
@@ -97,6 +97,7 @@ class PVSSearch(ChessSearch):
         return best_score, best_move
 
     def _pvs(self, state, depth: int, alpha: float, beta: float, start: float) -> float:
+        self.nodes_visited += 1
         if time.time() - start >= self.time_limit:
             raise TimeoutError
 

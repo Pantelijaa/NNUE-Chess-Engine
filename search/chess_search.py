@@ -29,7 +29,7 @@ class ChessSearch(ABC):
         self.time_elapsed: float = 0.0
         self.depth_reached: int = 0
 
-    def _get_statistics(self) -> dict:
+    def get_statistics(self) -> dict:
         return {
             "time_elapsed": self.time_elapsed,
             "time_limit": self.time_limit,
