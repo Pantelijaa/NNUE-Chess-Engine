@@ -287,7 +287,11 @@ poetry.toml
 pyrightconfig.json
 
 # Stockfish
-stockfish/
-stockfish_models/
+stockfish/*
+models/*
+
+# Dataset
+nnue/dataset/*
+nnue/processed/*
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm
