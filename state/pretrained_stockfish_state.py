@@ -1,40 +1,44 @@
 import chess
-from stockfish import Stockfish
-from state import ChessState
 import chess.engine
+from typing import Optional
+
+from state import ChessState
+
 
 class PretrainedStockfishState(ChessState):
-    _sf: Stockfish = None
+    _engine: Optional[chess.engine.SimpleEngine] = None
 
     @classmethod
     def load_stockfish(cls, stockfish_path: str):
-        cls._sf = Stockfish(
-            path=stockfish_path,
-            parameters={
-                'Threads': 1,
-                'Hash': 16
-            }
-        )
-        cls._sf.set_skill_level(20)
+        cls._engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
+        cls._engine.configure({"Threads": 1, "Hash": 16, "Skill Level": 20, "EvalFile": "./models/nn-c288c895ea92.nnue"})
 
     def __init__(self, depth: int = 0):
         super().__init__(depth)
 
     def _compute_eval_score(self, board: chess.Board) -> float:
-        if self._sf is None:
-            self.load_stockfish(stockfish_path="./stockfish/stockfish-windows-x86-64-avx2.exe")
+        if self._engine is None:
+            self.load_stockfish("./stockfish/stockfish-windows-x86-64-avx2.exe")
 
         if board.is_checkmate():
-            return -99999.0 if board.turn == chess.WHITE else 99999.0
+            return -9999 + self.depth
+
         if board.is_stalemate() or board.is_insufficient_material():
             return 0.0
 
-        self._sf.set_fen_position(board.fen())
-        ev = self._sf.get_evaluation()
+        info = self._engine.analyse(board, chess.engine.Limit(depth=1))  # type: ignore[union-attr]
+        score = info["score"].white()
+        mate = score.mate()
+        if mate is not None:
+            cp = 9000 if mate > 0 else -9000
+        else:
+            raw = score.score(mate_score=9000)
+            cp = max(-9000, min(9000, raw if raw is not None else 0))
 
-        if ev["type"] == "cp":
-            return float(max(-9000, min(9000, ev["value"])))
+        return float(cp) if board.turn == chess.WHITE else -float(cp)
 
-        return 99999.0 if ev["value"] > 0 else -99999.0
-
-
+    @classmethod
+    def close(cls):
+        if cls._engine is not None:
+            cls._engine.quit()
+            cls._engine = None
