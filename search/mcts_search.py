@@ -6,10 +6,9 @@ import random
 from search import ChessSearch
 
 C_SQRT_TWO = 1.414
+EVAL_SCALE = 600.0
 
 class MCTSNode:
-    __slots__ = ["move", "turn", "parent", "children", "w", "n", "untried_moves"]
-
     def __init__(self, move=None, parent=None, turn=chess.WHITE):
         self.move = move
         self.parent = parent
@@ -35,14 +34,15 @@ class MCTSNode:
         return max(self.children, key=lambda node: node.ucb1(pn, c))
 
 class MCTSSearch(ChessSearch):
-    def __init__(self, time_limit: float = 1.0, rollout_depth: int = 30, c: float = C_SQRT_TWO):
+    def __init__(self, time_limit: float = 1.0, c: float = C_SQRT_TWO):
         super().__init__(time_limit)
-        self.rollout_depth = rollout_depth
         self.c = c
         self.simulations_done = 0
 
     def best_move(self, board: chess.Board, state_class=None) -> chess.Move:
         self._reset_statistics()
+        if state_class is not None:
+            state_class.clear_eval_cache()
         start = time.time()
 
         root = MCTSNode(turn=board.turn)
@@ -50,11 +50,10 @@ class MCTSSearch(ChessSearch):
 
         while time.time() - start < self.time_limit:
             node, depth_pushed = self._select_expand(root, board)
-            result, rollout_moves = self._simulate(board)
-
-            for _ in range(rollout_moves):
-                board.pop()
-
+            if state_class is not None:
+                result = self._evaluate(board, state_class)
+            else:
+                result = self._simulate(board)
             self._backpropagate(node, result)
 
             for _ in range(depth_pushed):
@@ -111,26 +110,40 @@ class MCTSSearch(ChessSearch):
             if depth_pushed > self.depth_reached:
                 self.depth_reached = depth_pushed
 
-    def _simulate(self, board: chess.Board):
-        moves_made = 0
+    def _evaluate(self, board: chess.Board, state_class) -> float:
+        if board.is_game_over():
+            return self._outcome(board)
 
-        while not board.is_game_over() and moves_made < self.rollout_depth:
+        state = state_class(board)
+        score_stm = state.get_eval_score()
+        white_score = score_stm if board.turn == chess.WHITE else -score_stm
+        return 1.0 / (1.0 + math.exp(-white_score / EVAL_SCALE))
+
+    def _simulate(self, board: chess.Board) -> float:
+        moves_made = 0
+        rollout_depth = 20
+
+        while not board.is_game_over() and moves_made < rollout_depth:
             moves = list(board.legal_moves)
             if not moves:
                 break
             board.push(random.choice(moves))
             moves_made += 1
 
-        return self._outcome(board), moves_made
+        result = self._outcome(board)
+
+        for i in range(0, moves_made):
+            board.pop()
+
+        return result
 
     def _backpropagate(self, node: MCTSNode, result: float):
         while node is not None:
             node.n += 1
-            # w tracks wins for the player who selected INTO this node (the parent's player)
             if node.turn == chess.BLACK:
-                node.w += result        # white-wins score; white (parent) prefers high
+                node.w += result
             else:
-                node.w += 1.0 - result  # black-wins score; black (parent) prefers high
+                node.w += 1.0 - result
             node = node.parent
 
     def _outcome(self, board: chess.Board) -> float:

@@ -20,7 +20,7 @@ class PretrainedStockfishState(ChessState):
     def __init__(self, board: chess.Board, parent=None, move = None):
         super().__init__(board, parent, move)
 
-    def get_eval_score(self) -> float:
+    def _compute_eval_score(self) -> float:
         if self._sf is None:
             self.load_stockfish(stockfish_path="./stockfish/stockfish-windows-x86-64-avx2.exe")
 

@@ -95,7 +95,7 @@ class HandCraftedState(ChessState):
     def __init__(self, board: chess.Board, parent=None, move: chess.Move | None = None):
         super().__init__(board, parent, move)
 
-    def get_eval_score(self) -> float:
+    def _compute_eval_score(self) -> float:
         if self.board.is_checkmate():
             return -9999 + self.depth
         

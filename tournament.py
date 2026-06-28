@@ -25,7 +25,8 @@ from game_result import GameResult
 
 agent_map = {
     "Handcrafted": (PVSSearch, HandCraftedState),
-    "MCTS": (MCTSSearch, None),
+    "MCTS_random": (MCTSSearch, None),
+    "MCTS_eval": (MCTSSearch, HandCraftedState),
     "PretrainedStockfish": (PVSSearch, PretrainedStockfishState)
 }
 

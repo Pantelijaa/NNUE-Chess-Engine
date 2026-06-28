@@ -36,6 +36,7 @@ class PVSSearch(ChessSearch):
     def best_move(self, board: chess.Board, state_class):
         self._reset_statistics()
         self._tt.clear()
+        state_class.clear_eval_cache()
         start = time.time()
 
         best_move = list(board.legal_moves)[0]
@@ -49,7 +50,6 @@ class PVSSearch(ChessSearch):
                 score, move = self._root_search(board, state_class, depth, start)
                 if move is not None:
                     best_move = move
-                    print(score)
                     self.depth_reached = depth
             except TimeoutError:
                 break
