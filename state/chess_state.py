@@ -15,7 +15,7 @@ class ChessState(ABC):
         self.depth = depth
 
     def make_child(self) -> "ChessState":
-        return type(self)(self.depth)
+        return type(self)(self.depth + 1)
 
     def get_eval_score(self, board: chess.Board) -> float:
         if board.is_game_over():

@@ -123,6 +123,8 @@ class HandCraftedState(ChessState):
         score += self._eval_mobility(board)
         score += self._eval_king_attacks(board)
         score += self._eval_rook_on_seventh(board)
+        score += self._eval_trapped_bishops(board)
+        score += self._eval_inactive_pieces(board)
 
         return float(score) if board.turn == chess.WHITE else -float(score)
 
@@ -181,7 +183,7 @@ class HandCraftedState(ChessState):
                     break
 
             if is_passed:
-                score += 15 * rank_idx
+                score += 10 * rank_idx
 
         for square in board.pieces(chess.PAWN, chess.BLACK):
             file_idx = chess.square_file(square)
@@ -198,7 +200,7 @@ class HandCraftedState(ChessState):
                     break
 
             if is_passed:
-                score -= 15 * (7 - rank_idx)
+                score -= 10 * (7 - rank_idx)
 
         return score
 
@@ -262,7 +264,7 @@ class HandCraftedState(ChessState):
                 white_mob += chess.popcount(board.attacks_mask(square))
             for square in board.pieces(pt, chess.BLACK):
                 black_mob += chess.popcount(board.attacks_mask(square))
-        result = (white_mob - black_mob) * 3
+        result = (white_mob - black_mob) * 2
         return result
 
     def _eval_king_attacks(self, board: chess.Board) -> int:
@@ -278,7 +280,7 @@ class HandCraftedState(ChessState):
             attacks_on_zone = 0
             for square in chess.scan_forward(king_zone):
                 attacks_on_zone += chess.popcount(board.attackers_mask(color, square))
-            score += sign * attacks_on_zone * 5
+            score += sign * attacks_on_zone * 4
         return score
 
     def _eval_rook_on_seventh(self, board: chess.Board) -> int:
@@ -292,4 +294,37 @@ class HandCraftedState(ChessState):
         for square in board.pieces(chess.ROOK, chess.BLACK):
             if chess.square_rank(square) == 1:
                 score -= 30
+        return score
+
+    def _eval_trapped_bishops(self, board: chess.Board) -> int:
+        """
+        Large penalty for bishops with 0-2 available moves (trapped behind pawns).
+        """
+        score = 0
+        for color, sign in [(chess.WHITE, 1), (chess.BLACK, -1)]:
+            for square in board.pieces(chess.BISHOP, color):
+                moves = chess.popcount(board.attacks_mask(square) & ~board.occupied_co[color])
+                if moves <= 1:
+                    score -= sign * 75
+                elif moves == 2:
+                    score -= sign * 30
+        return score
+
+    def _eval_inactive_pieces(self, board: chess.Board) -> int:
+        """
+        Penalty for knights and rooks with very few available moves.
+        Knights with <=2 moves are badly placed; rooks with 0 moves are completely blocked.
+        """
+        score = 0
+        for color, sign in [(chess.WHITE, 1), (chess.BLACK, -1)]:
+            for square in board.pieces(chess.KNIGHT, color):
+                moves = chess.popcount(board.attacks_mask(square) & ~board.occupied_co[color])
+                if moves <= 2:
+                    score -= sign * 20 * (3 - moves)
+            for square in board.pieces(chess.ROOK, color):
+                moves = chess.popcount(board.attacks_mask(square) & ~board.occupied_co[color])
+                if moves == 0:
+                    score -= sign * 40
+                elif moves <= 2:
+                    score -= sign * 15
         return score

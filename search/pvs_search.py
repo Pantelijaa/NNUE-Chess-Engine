@@ -5,6 +5,10 @@ import chess
 import chess.polyglot
 from . import ChessSearch
 
+TT_EXACT = 0
+TT_LOWER = 1  # fail-high: score is a lower bound
+TT_UPPER = 2  # fail-low: score is an upper bound
+
 TT_SCORE = 10_000 # Transposition table hit
 PROMOTION_SCORE = 8_000 # Promocija pijuna
 MVV_LVA_BASE = 5_000 # Most Valuable Victim - Least Valuable Attacker
@@ -25,6 +29,8 @@ class PVSSearch(ChessSearch):
     def __init__(self, time_limit: float = 1.0):
         super().__init__(time_limit)
         self._tt: dict = {}
+        self._tt_age = 0
+        self._tt_max_size = 200_000
         self._killer = [[None, None] for _ in range(64)]
         self._history = defaultdict(int)
 
@@ -35,10 +41,11 @@ class PVSSearch(ChessSearch):
 
     def best_move(self, board: chess.Board, state_class):
         self._reset_statistics()
-        self._tt.clear()
+        self._tt_age += 1
+        self._history.clear()
+        self._killer = [[None, None] for _ in range(64)]
         state_class.clear_eval_cache()
         start = time.time()
-
         best_move = list(board.legal_moves)[0]
         depth = 1
 
@@ -47,90 +54,66 @@ class PVSSearch(ChessSearch):
             if elapsed >= self.time_limit:
                 break
             try:
-                score, move = self._root_search(board, state_class, depth, start)
+                score, move = self._pvs(state_class(), depth, -float('inf'), float('inf'), start, board, is_root=True)
                 if move is not None:
                     best_move = move
                     self.depth_reached = depth
             except TimeoutError:
                 break
             depth += 1
-
         self.time_elapsed = time.time() - start
         return best_move
 
-    def _root_search(self, board, state_class, depth: int, start) -> tuple[float, chess.Move | None]:
-        initial_state = state_class()
-        alpha = -float('inf')
-        beta = float('inf')
-
-        best_score = -float('inf')
-        best_move: chess.Move | None = None
-
-        ordered = self._order_moves(board, depth, tt_move=self._get_tt_move(board))
-
-        for move in ordered:
-            if time.time() - start >= self.time_limit:
-                raise TimeoutError
-
-            board.push(move)
-            child_state = initial_state.make_child()
-            try:
-                if best_move is None:
-                    score = -self._pvs(child_state, depth - 1, -beta, -alpha, start, board)
-                else:
-                    score = -self._pvs(child_state, depth - 1, -alpha - 1, -alpha, start, board)
-                    self.null_windows += 1
-                    if alpha < score < beta:
-                        score = -self._pvs(child_state, depth - 1, -beta, -alpha, start, board)
-            finally:
-                board.pop()
-
-            if score > best_score:
-                best_score = score
-                best_move = move
-            alpha = max(alpha, score)
-
-        if best_move:
-            self._store_tt(board, depth, best_score, best_move, initial_state.depth)
-
-        return best_score, best_move
-
-    def _pvs(self, state, depth: int, alpha: float, beta: float, start: float, board: chess.Board) -> float:
+    def _pvs(self, state, depth: int, alpha: float, beta: float, start: float, board: chess.Board, is_root: bool = False) -> tuple[float, chess.Move | None] | float:
         self.nodes_visited += 1
         if time.time() - start >= self.time_limit:
             raise TimeoutError
+        original_alpha = alpha
+        if not is_root:
+            current_mate_score = -9999 + state.depth
+            alpha = max(alpha, current_mate_score)
+            if alpha >= beta:
+                return alpha
 
-        current_mate_score = -9999 + state.depth
-        alpha = max(alpha, current_mate_score)
-        if alpha >= beta:
-            return alpha
+            if board.is_check():
+                depth += 1
 
-        if board.is_check():
-            depth += 1
+            tt_entry = self._lookup_tt(board)
+            if tt_entry and tt_entry["age"] == self._tt_age and tt_entry["depth"] >= depth:
+                self.tt_hits += 1
+                tt_score = tt_entry["score"]
+                if tt_score > 9000:
+                    tt_score = tt_score - tt_entry["node_depth"] + state.depth
+                elif tt_score < -9000:
+                    tt_score = tt_score + tt_entry["node_depth"] - state.depth
+                flag = tt_entry["flag"]
+                if flag == TT_EXACT:
+                    return tt_score
+                elif flag == TT_LOWER:
+                    alpha = max(alpha, tt_score)
+                elif flag == TT_UPPER:
+                    beta = min(beta, tt_score)
+                if alpha >= beta:
+                    return tt_score
 
-        tt_entry = self._lookup_tt(board)
-        if tt_entry and tt_entry["depth"] >= depth:
-            self.tt_hits += 1
-            tt_score = tt_entry["score"]
-            if tt_score > 9000:
-                tt_score = tt_score - tt_entry["node_depth"] + state.depth
-            elif tt_score < -9000:
-                tt_score = tt_score + tt_entry["node_depth"] - state.depth
-            return tt_score
+            if depth <= 0:
+                return self._quiescence(state, alpha, beta, start, board)
 
-        if depth <= 0:
-            return self._quiescence(state, alpha, beta, start, board)
-
-        if board.is_game_over():
-            return state.get_eval_score(board)
+            if board.is_game_over():
+                return state.get_eval_score(board)
+        else:
+            tt_entry = self._lookup_tt(board)
 
         tt_move = tt_entry["best_move"] if tt_entry else None
         ordered = self._order_moves(board, depth, tt_move=tt_move)
         first = True
         best_score = -float('inf')
-        best_move = None
+        best_move: chess.Move | None = None
 
         for move in ordered:
+            if is_root and time.time() - start >= self.time_limit:
+                raise TimeoutError
+
             board.push(move)
             next_state = state.make_child()
             try:
@@ -158,21 +141,29 @@ class PVSSearch(ChessSearch):
                 break
 
         if best_move:
-            self._store_tt(board, depth, best_score, best_move, state.depth)
+            if best_score >= beta:
+                flag = TT_LOWER
+            elif best_score <= original_alpha:
+                flag = TT_UPPER
+            else:
+                flag = TT_EXACT
+            self._store_tt(board, depth, best_score, best_move, state.depth, flag)
 
-        return best_score
+        return (best_score, best_move) if is_root else best_score
 
     def _quiescence(self, state, alpha: float, beta: float, start: float, board: chess.Board) -> float:
         if time.time() - start >= self.time_limit:
             raise TimeoutError
 
-        stand_pat = state.get_eval_score(board)
-        if stand_pat >= beta:
-            return beta
-        alpha = max(alpha, stand_pat)
+        in_check = board.is_check()
+        if not in_check:
+            stand_pat = state.get_eval_score(board)
+            if stand_pat >= beta:
+                return beta
+            alpha = max(alpha, stand_pat)
 
-        enemy_pieces = board.occupied_co[not board.turn]
-        for move in board.generate_legal_moves(chess.BB_ALL, enemy_pieces):
+        moves = board.legal_moves if in_check else board.generate_legal_moves(chess.BB_ALL, board.occupied_co[not board.turn])
+        for move in moves:
             board.push(move)
             next_state = state.make_child()
             try:
@@ -245,12 +236,21 @@ class PVSSearch(ChessSearch):
         entry = self._lookup_tt(board)
         return entry["best_move"] if entry else None
 
-    def _store_tt(self, board: chess.Board, depth: int, score: float, best_move: chess.Move, node_depth : int):
-        self._tt[self._hash(board)] = {
+    def _store_tt(self, board: chess.Board, depth: int, score: float, best_move: chess.Move, node_depth: int, flag: int = TT_EXACT):
+        key = self._hash(board)
+        existing = self._tt.get(key)
+        if existing:
+            if existing["age"] == self._tt_age and existing["depth"] > depth:
+                return
+        elif len(self._tt) >= self._tt_max_size:
+            return
+        self._tt[key] = {
             "score": score,
             "depth": depth,
             "best_move": best_move,
-            "node_depth": node_depth
+            "node_depth": node_depth,
+            "flag": flag,
+            "age": self._tt_age,
         }
 
     def _reset_statistics(self):
