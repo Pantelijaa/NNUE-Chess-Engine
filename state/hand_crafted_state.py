@@ -122,6 +122,7 @@ class HandCraftedState(ChessState):
         score += self._eval_rook_files(board)
         score += self._eval_mobility(board)
         score += self._eval_king_attacks(board)
+        score += self._eval_rook_on_seventh(board)
 
         return float(score) if board.turn == chess.WHITE else -float(score)
 
@@ -277,5 +278,18 @@ class HandCraftedState(ChessState):
             attacks_on_zone = 0
             for square in chess.scan_forward(king_zone):
                 attacks_on_zone += chess.popcount(board.attackers_mask(color, square))
-            score += sign * attacks_on_zone * 6
+            score += sign * attacks_on_zone * 5
+        return score
+
+    def _eval_rook_on_seventh(self, board: chess.Board) -> int:
+        """
+        Bonus for rook on 7th rank (white) / 2nd rank (black)
+        """
+        score = 0
+        for square in board.pieces(chess.ROOK, chess.WHITE):
+            if chess.square_rank(square) == 6:
+                score += 30
+        for square in board.pieces(chess.ROOK, chess.BLACK):
+            if chess.square_rank(square) == 1:
+                score -= 30
         return score
