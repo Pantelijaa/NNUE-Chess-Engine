@@ -5,7 +5,7 @@ from typing import Callable, Optional
 
 import chess
 
-from search import PVSSearch, MCTSSearch
+from search import PVSSearch, MCTSSearch, StockfishSearch
 from state import HandCraftedState, PretrainedStockfishState
 from game import Game
 from game_result import GameResult
@@ -27,7 +27,8 @@ agent_map = {
     "Handcrafted": (PVSSearch, HandCraftedState),
     "MCTS_random": (MCTSSearch, None),
     "MCTS_eval": (MCTSSearch, HandCraftedState),
-    "PretrainedStockfish": (PVSSearch, PretrainedStockfishState)
+    "PretrainedStockfish": (PVSSearch, PretrainedStockfishState),
+    "Stockfish": (StockfishSearch, None),
 }
 
 class Tournament:
