@@ -11,48 +11,29 @@ class ChessState(ABC):
         cls._eval_cache = {}
 
     @abstractmethod
-    def __init__(self, board, parent=None, move=None):
-        self.parent = parent
-        self.move = move
-        if parent is None:
-            self.board = board.copy()
-            self.depth: int = 0
-        else:
-            self.board = parent.board.copy()
-            self.board.push(self.move)
-            self.depth = parent.depth + 1
+    def __init__(self, depth: int = 0):
+        self.depth = depth
 
-    def get_eval_score(self) -> float:
-        if self.board.is_game_over():
-            return self._compute_eval_score()
-        key = chess.polyglot.zobrist_hash(self.board)
+    def make_child(self) -> "ChessState":
+        return type(self)(self.depth)
+
+    def get_eval_score(self, board: chess.Board) -> float:
+        if board.is_game_over():
+            return self._compute_eval_score(board)
+        key = chess.polyglot.zobrist_hash(board)
         cached = type(self)._eval_cache.get(key)
         if cached is not None:
             return cached
-        result = self._compute_eval_score()
+        result = self._compute_eval_score(board)
         type(self)._eval_cache[key] = result
         return result
 
     @abstractmethod
-    def _compute_eval_score(self) -> float:
+    def _compute_eval_score(self, board: chess.Board ) -> float:
         pass
 
-    def get_next_states(self) -> list:
-        return [self.__class__(self.board, parent=self, move=self.move) for move in self.board.legal_moves]
-
-    def get_unique_hash(self) -> str:
-        return self.board.fen()
-
-    def is_final_state(self) -> bool:
-        return self.board.is_game_over()
-
-    def reconstruct_path(self) -> list[chess.Move]:
-        path = []
-        state = self
-        while state.parent is not None:
-            path.append(state.move)
-            state = state.parent
-        return list(reversed(path))
+    def is_final_state(self, board: chess.Board) -> bool:
+        return board.is_game_over()
 
     @classmethod
     def clear_eval_cache(cls):

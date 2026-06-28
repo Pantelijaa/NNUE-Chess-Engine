@@ -8,7 +8,10 @@ from search import ChessSearch
 C_SQRT_TWO = 1.414
 EVAL_SCALE = 600.0
 
+
 class MCTSNode:
+    __slots__ = ["move", "turn", "parent", "children", "w", "n", "untried_moves"]
+
     def __init__(self, move=None, parent=None, turn=chess.WHITE):
         self.move = move
         self.parent = parent
@@ -17,9 +20,6 @@ class MCTSNode:
         self.n = 0
         self.turn = turn
         self.untried_moves = None
-
-    def is_fully_expanded(self) -> bool:
-        return self.untried_moves is not None and len(self.untried_moves) == 0
 
     def win_rate(self) -> float:
         return self.w / self.n if self.n > 0 else 0.0
@@ -32,6 +32,7 @@ class MCTSNode:
     def best_child(self, c: float = C_SQRT_TWO) -> "MCTSNode":
         pn = self.n
         return max(self.children, key=lambda node: node.ucb1(pn, c))
+
 
 class MCTSSearch(ChessSearch):
     def __init__(self, time_limit: float = 1.0, c: float = C_SQRT_TWO):
@@ -99,7 +100,6 @@ class MCTSSearch(ChessSearch):
 
                 return child, depth_pushed
 
-
             if not node.children:
                 return node, depth_pushed
 
@@ -114,8 +114,8 @@ class MCTSSearch(ChessSearch):
         if board.is_game_over():
             return self._outcome(board)
 
-        state = state_class(board)
-        score_stm = state.get_eval_score()
+        state = state_class()
+        score_stm = state.get_eval_score(board)
         white_score = score_stm if board.turn == chess.WHITE else -score_stm
         return 1.0 / (1.0 + math.exp(-white_score / EVAL_SCALE))
 
@@ -132,7 +132,7 @@ class MCTSSearch(ChessSearch):
 
         result = self._outcome(board)
 
-        for i in range(0, moves_made):
+        for _ in range(moves_made):
             board.pop()
 
         return result
@@ -150,10 +150,8 @@ class MCTSSearch(ChessSearch):
         if not board.is_game_over():
             return 0.5
         result = board.result()
-        if result == "1-0":
-            return 1.0
-        elif result == "0-1":
-            return 0.0
+        if result == "1-0": return 1.0
+        if result == "0-1": return 0.0
         return 0.5
 
     def _reset_statistics(self):
@@ -162,7 +160,5 @@ class MCTSSearch(ChessSearch):
 
     def get_statistics(self) -> dict:
         stats = super().get_statistics()
-        stats.update({
-            "simulations": self.simulations_done,
-        })
+        stats.update({"simulations": self.simulations_done})
         return stats

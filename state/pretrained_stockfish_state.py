@@ -17,19 +17,19 @@ class PretrainedStockfishState(ChessState):
         )
         cls._sf.set_skill_level(20)
 
-    def __init__(self, board: chess.Board, parent=None, move = None):
-        super().__init__(board, parent, move)
+    def __init__(self, depth: int = 0):
+        super().__init__(depth)
 
-    def _compute_eval_score(self) -> float:
+    def _compute_eval_score(self, board: chess.Board) -> float:
         if self._sf is None:
             self.load_stockfish(stockfish_path="./stockfish/stockfish-windows-x86-64-avx2.exe")
 
-        if self.board.is_checkmate():
-            return -99999.0 if self.board.turn == chess.WHITE else 99999.0
-        if self.board.is_stalemate() or self.board.is_insufficient_material():
+        if board.is_checkmate():
+            return -99999.0 if board.turn == chess.WHITE else 99999.0
+        if board.is_stalemate() or board.is_insufficient_material():
             return 0.0
 
-        self._sf.set_fen_position(self.board.fen())
+        self._sf.set_fen_position(board.fen())
         ev = self._sf.get_evaluation()
 
         if ev["type"] == "cp":

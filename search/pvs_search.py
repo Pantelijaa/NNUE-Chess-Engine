@@ -8,8 +8,8 @@ from . import ChessSearch
 TT_SCORE = 10_000 # Transposition table hit
 PROMOTION_SCORE = 8_000 # Promocija pijuna
 MVV_LVA_BASE = 5_000 # Most Valuable Victim - Least Valuable Attacker
-KILLER_1_SCORE = 900 # Killer potez slot 1
-KILLER_2_SCORE = 800 # Killer potez slot 2
+KILLER_1_SCORE = 800 # Killer potez slot 1
+KILLER_2_SCORE = 700 # Killer potez slot 2
 
 PIECE_VALUES = {
     chess.PAWN: 100,
@@ -59,7 +59,7 @@ class PVSSearch(ChessSearch):
         return best_move
 
     def _root_search(self, board, state_class, depth: int, start) -> tuple[float, chess.Move | None]:
-        initial_state = state_class(board)
+        initial_state = state_class()
         alpha = -float('inf')
         beta = float('inf')
 
@@ -73,16 +73,15 @@ class PVSSearch(ChessSearch):
                 raise TimeoutError
 
             board.push(move)
+            child_state = initial_state.make_child()
             try:
-                state = state_class(board, parent=initial_state, move=move)
-
                 if best_move is None:
-                    score = -self._pvs(state, depth - 1, -beta, -alpha, start)
+                    score = -self._pvs(child_state, depth - 1, -beta, -alpha, start, board)
                 else:
-                    score = -self._pvs(state, depth - 1, -alpha - 1, -alpha, start)
+                    score = -self._pvs(child_state, depth - 1, -alpha - 1, -alpha, start, board)
                     self.null_windows += 1
                     if alpha < score < beta:
-                        score = -self._pvs(state, depth - 1, -beta, -alpha, start)
+                        score = -self._pvs(child_state, depth - 1, -beta, -alpha, start, board)
             finally:
                 board.pop()
 
@@ -96,7 +95,7 @@ class PVSSearch(ChessSearch):
 
         return best_score, best_move
 
-    def _pvs(self, state, depth: int, alpha: float, beta: float, start: float) -> float:
+    def _pvs(self, state, depth: int, alpha: float, beta: float, start: float, board: chess.Board) -> float:
         self.nodes_visited += 1
         if time.time() - start >= self.time_limit:
             raise TimeoutError
@@ -106,10 +105,10 @@ class PVSSearch(ChessSearch):
         if alpha >= beta:
             return alpha
 
-        if state.board.is_check():
+        if board.is_check():
             depth += 1
 
-        tt_entry = self._lookup_tt(state.board)
+        tt_entry = self._lookup_tt(board)
         if tt_entry and tt_entry["depth"] >= depth:
             self.tt_hits += 1
             tt_score = tt_entry["score"]
@@ -120,28 +119,31 @@ class PVSSearch(ChessSearch):
             return tt_score
 
         if depth <= 0:
-            return self._quiescence(state, alpha, beta, start)
+            return self._quiescence(state, alpha, beta, start, board)
 
-        if state.is_final_state():
-            return state.get_eval_score()
+        if board.is_game_over():
+            return state.get_eval_score(board)
 
         tt_move = tt_entry["best_move"] if tt_entry else None
-        ordered = self._order_moves(state.board, depth, tt_move=tt_move)
+        ordered = self._order_moves(board, depth, tt_move=tt_move)
         first = True
         best_score = -float('inf')
         best_move = None
 
         for move in ordered:
-            next_state = state.__class__(state.board, parent=state, move=move)
-
-            if first:
-                score = -self._pvs(next_state, depth - 1, -beta, -alpha, start)
-                first = False
-            else:
-                score = -self._pvs(next_state, depth - 1, -alpha - 1, -alpha, start)
-                self.null_windows += 1
-                if alpha < score < beta:
-                    score = -self._pvs(next_state, depth - 1, -beta, -alpha, start)
+            board.push(move)
+            next_state = state.make_child()
+            try:
+                if first:
+                    score = -self._pvs(next_state, depth - 1, -beta, -alpha, start, board)
+                    first = False
+                else:
+                    score = -self._pvs(next_state, depth - 1, -alpha - 1, -alpha, start, board)
+                    self.null_windows += 1
+                    if alpha < score < beta:
+                        score = -self._pvs(next_state, depth - 1, -beta, -alpha, start, board)
+            finally:
+                board.pop()
 
             if score > best_score:
                 best_score = score
@@ -150,29 +152,33 @@ class PVSSearch(ChessSearch):
             alpha = max(alpha, score)
             if alpha >= beta:
                 self.cutoffs += 1
-                if not state.board.is_capture(move) and move.promotion is None:
+                if not board.is_capture(move) and move.promotion is None:
                     self._update_killer(move, depth)
                     self._update_history(move, depth)
                 break
 
         if best_move:
-            self._store_tt(state.board, depth, best_score, best_move, state.depth)
+            self._store_tt(board, depth, best_score, best_move, state.depth)
 
         return best_score
 
-    def _quiescence(self, state, alpha: float, beta: float, start: float) -> float:
+    def _quiescence(self, state, alpha: float, beta: float, start: float, board: chess.Board) -> float:
         if time.time() - start >= self.time_limit:
             raise TimeoutError
 
-        stand_pat = state.get_eval_score()
+        stand_pat = state.get_eval_score(board)
         if stand_pat >= beta:
             return beta
         alpha = max(alpha, stand_pat)
 
-        enemy_pieces = state.board.occupied_co[not state.board.turn]
-        for move in state.board.generate_legal_moves(chess.BB_ALL, enemy_pieces):
-            next_state = state.__class__(state.board, parent=state, move=move)
-            score = -self._quiescence(next_state, -beta, -alpha, start)
+        enemy_pieces = board.occupied_co[not board.turn]
+        for move in board.generate_legal_moves(chess.BB_ALL, enemy_pieces):
+            board.push(move)
+            next_state = state.make_child()
+            try:
+                score = -self._quiescence(next_state, -beta, -alpha, start, board)
+            finally:
+                board.pop()
 
             if score >= beta:
                 return beta
