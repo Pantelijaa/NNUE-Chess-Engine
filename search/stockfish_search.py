@@ -14,7 +14,7 @@ class StockfishSearch(ChessSearch):
     @classmethod
     def load_stockfish(cls):
         cls._engine = chess.engine.SimpleEngine.popen_uci(STOCKFISH_PATH)
-        cls._engine.configure({"Threads": 1, "Hash": 16, "EvalFile": "./models/nn-c288c895ea92.nnue"})
+        cls._engine.configure({"Threads": 8, "Hash": 256, "EvalFile": "./models/nn-c288c895ea92.nnue"})
 
     @classmethod
     def close(cls):
