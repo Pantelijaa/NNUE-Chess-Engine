@@ -6,9 +6,9 @@ import time
 from . import DatasetStreamer, HalfKPNNUE
 
 
-def train_nnue(model, dataset_path, epochs=3, batch_size=32, lr=0.0001, print_freq=100):
+def train_nnue(model, dataset_path, epochs=3, batch_size=4096, lr=0.0001, print_freq=100):
     dataset = DatasetStreamer(dataset_path)
-    train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(dataset, batch_size=1, collate_fn=lambda x: x[0])
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     criterion = nn.MSELoss()
@@ -39,6 +39,7 @@ def train_nnue(model, dataset_path, epochs=3, batch_size=32, lr=0.0001, print_fr
 
             loss.backward()
 
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
 
             optimizer.step()
 

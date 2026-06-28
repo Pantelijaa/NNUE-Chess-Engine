@@ -6,6 +6,9 @@ import pyarrow.dataset as ds
 from .accumulator import get_halfkp_indices
 import torch
 import math
+import pyarrow.parquet as pq
+import os
+import numpy as np
 
 
 def indices_to_tensor(indices_list, num_features=41024):
@@ -19,13 +22,29 @@ class DatasetStreamer(IterableDataset):
         self.folder_path = folder_path
 
     def __iter__(self):
-        dataset = ds.dataset(self.folder_path, format='parquet')
-        for batch in dataset.to_batches(columns=["w_indices", "b_indices", "cp", "stm"]):
-            df = batch.to_pandas()
-            for _, row in df.iterrows():
-                w_tensor = indices_to_tensor(row["w_indices"])
-                b_tensor = indices_to_tensor(row["b_indices"])
-                cp_target = torch.tensor([row["cp"] * 30 * 100], dtype=torch.float32)
-                stm = torch.tensor(row["stm"])
-                yield w_tensor, b_tensor, cp_target, stm
+        files = sorted([
+            os.path.join(self.folder_path, f)
+            for f in os.listdir(self.folder_path)
+            if f.endswith('.parquet')
+        ])
+
+        for file in files:
+            pf = pq.ParquetFile(file)
+            for batch in pf.iter_batches(batch_size=4096, columns=["w_features", "b_features", "cp", "stm"]):
+                w = np.frombuffer(
+                    b"".join(batch.column("w_features").to_pylist()),
+                    dtype=np.uint8
+                ).reshape(-1, 41024).copy()
+
+                b = np.frombuffer(
+                    b"".join(batch.column("b_features").to_pylist()),
+                    dtype=np.uint8
+                ).reshape(-1, 41024).copy()
+
+                yield (
+                    torch.from_numpy(w).float(),
+                    torch.from_numpy(b).float(),
+                    torch.tensor(batch.column("cp").to_pylist(), dtype=torch.float32).unsqueeze(1),
+                    torch.tensor(batch.column("stm").to_pylist(), dtype=torch.int32)
+                )
 
