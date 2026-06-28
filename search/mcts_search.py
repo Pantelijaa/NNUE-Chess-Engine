@@ -100,7 +100,6 @@ class MCTSSearch(ChessSearch):
                 break
             node = node.best_child(self.c)
             current_selection_depth += 1
-            print(current_selection_depth)
 
         if current_selection_depth > self.depth_reached:
             self.depth_reached = current_selection_depth
@@ -118,13 +117,15 @@ class MCTSSearch(ChessSearch):
         untried: list = node.untried_moves
         for move in untried:
             if node.board.gives_check(move):
-                test_board = node.board.copy()
+                test_board = node.board
                 test_board.push(move)
                 if test_board.is_checkmate():
                     untried.remove(move)
                     child = MCTSNode(board=test_board, parent=node, move=move)
                     node.children.append(child)
+                    test_board.pop()
                     return child
+                test_board.pop()
 
         move = random.choice(untried)
         node.untried_moves.remove(move)
@@ -146,7 +147,8 @@ class MCTSSearch(ChessSearch):
             0.0 = pobeda crnog
             0.5 = remi
         """
-        board = node.board.copy()
+        board = node.board
+        moves_made = []
         current_depth = 0
 
         while not board.is_game_over() and current_depth < self.rollout_depth:
@@ -164,12 +166,16 @@ class MCTSSearch(ChessSearch):
                 move = random.choice(legal_moves)
 
             board.push(move)
+            moves_made.append(move)
             current_depth += 1
 
         self.avg_rollout_depth = (
                 (self.avg_rollout_depth * self.simulations_done + current_depth)
                 / (self.simulations_done + 1)
         )
+
+        for _ in moves_made:
+            board.pop()
 
         return self._outcome(board)
 
