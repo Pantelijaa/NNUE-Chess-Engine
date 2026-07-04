@@ -24,6 +24,7 @@ agent_map = {
     "NNUE": (PVSSearch, NNUEState),
     "PVSStockfish": (PVSSearch, StockfishTrained),
     "Handcrafted": (PVSSearch, HandCraftedState),
+    "MCTS_nnue": (MCTSSearch, NNUEState),
     "MCTS_eval": (MCTSSearch, HandCraftedState),
     "MCTS_random": (MCTSSearch, None),
 }
