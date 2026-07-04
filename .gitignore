@@ -293,5 +293,10 @@ models/*
 # Dataset
 nnue/dataset/*
 nnue/processed/*
+nnue/binpack/*
+
+# Utils
+utils/easy_train_data/
+.process_watchdog_helper.bat
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm

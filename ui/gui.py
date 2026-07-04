@@ -4,7 +4,7 @@ import chess
 import threading
 import time
 
-from tournament import Tournament, agent_map
+from matchmaker import Matchmaker, agent_map
 
 
 class ChessTournamentGUI:
@@ -16,7 +16,7 @@ class ChessTournamentGUI:
 
         self.board = chess.Board()
         self.game_running = False
-        self.tournament = Tournament(time_limit=1.0)
+        self.matchmaker = Matchmaker(time_limit=1.0)
 
         self.light_color = "#eeeed2"
         self.dark_color = "#769656"
@@ -117,7 +117,7 @@ class ChessTournamentGUI:
 
         self._update_status(f"Partija: {white_name} vs {black_name}")
 
-        result = self.tournament.play_game(
+        result = self.matchmaker.play_game(
             white_name=white_name,
             black_name=black_name,
             move_callback=self._on_move,  # GUI callback

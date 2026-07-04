@@ -1,85 +1,108 @@
 import chess
-import torch.nn as nn
-import torch
 import numpy as np
 
-def get_piece_offset(piece: chess.Piece, is_black_perspective: bool) -> int:
-    p_type = piece.piece_type
-    p_color = piece.color
+NUM_FEATURES = 41024
 
+def get_piece_offset(piece: chess.Piece, is_black_perspective: bool) -> int:
+    p_color = piece.color
     if is_black_perspective:
         p_color = not p_color
-
     color_offset = 0 if p_color == chess.WHITE else 5
-    type_idx = p_type - 1
-    return (color_offset + type_idx) * 64
+    return (color_offset + (piece.piece_type - 1)) * 64
+
 
 def get_halfkp_indices(board: chess.Board):
-    white_king_sq = board.king(chess.WHITE)
-    black_king_sq = board.king(chess.BLACK)
-
-    if white_king_sq is None or black_king_sq is None:
+    wk = board.king(chess.WHITE)
+    bk = board.king(chess.BLACK)
+    if wk is None or bk is None:
         return None
-    white_king_sq_flipped = chess.square_mirror(white_king_sq)
-    black_king_sq_flipped = chess.square_mirror(black_king_sq)
+    bk_f = chess.square_mirror(bk)
 
-    white_indices = []
-    black_indices = []
-
-    for square in chess.SQUARES:
-        piece = board.piece_at(square)
-        if piece is None or piece.piece_type == chess.KING:
+    w_idx = []
+    b_idx = []
+    for sq, piece in board.piece_map().items():
+        if piece.piece_type == chess.KING:
             continue
+        w_idx.append(wk * 512 + get_piece_offset(piece, False) + sq)
+        b_idx.append(bk_f * 512 + get_piece_offset(piece, True) + chess.square_mirror(sq))
+    return w_idx, b_idx
 
-        pt_offset_white = get_piece_offset(piece, is_black_perspective=False)
-        white_idx = white_king_sq * 512 + pt_offset_white + square
-        white_indices.append(white_idx)
 
-        square_flipped = chess.square_mirror(square)
-        pt_offset_black = get_piece_offset(piece, is_black_perspective=True)
-        black_idx = black_king_sq_flipped * 512 + pt_offset_black + square_flipped
-        black_indices.append(black_idx)
+class NNUEInference:
+    """
+    All network weights as numpy arrays + a fast forward pass.
+    The result is the side-to-move-relative score normalised to ~[-1, 1].
+    """
 
-    return white_indices, black_indices
+    def __init__(self):
+        self.ft_weight = None  # [41024, 256]
+        self.ft_bias = None    # [256]
+        self.w1 = None         # [512, 32]
+        self.b1 = None         # [32]
+        self.w2 = None         # [32, 32]
+        self.b2 = None         # [32]
+        self.w3 = None         # [32, 1]
+        self.b3 = None         # [1]
 
-class Accumulator():
-    def __init__(self, transformer_layer: nn.Linear):
-        self.weights = transformer_layer.weight.detach().numpy().T # [41024, 256]
-        self.bias = transformer_layer.bias.detach().numpy() # [256]
+    @classmethod
+    def from_model(cls, model):
+        self = cls()
+        self.ft_weight = model.ft_weight.detach().numpy().astype(np.float32)  # [41024, 256]
+        self.ft_bias = model.ft_bias.detach().numpy().astype(np.float32)      # [256]
 
-        self.white_state = np.zeros(256, dtype=np.float32)
-        self.black_state = np.zeros(256, dtype=np.float32)
+        sd = model.hidden_layers.state_dict()
+        self.w1 = sd["0.weight"].numpy().T.astype(np.float32).copy()  # [512, 32]
+        self.b1 = sd["0.bias"].numpy().astype(np.float32)            # [32]
+        self.w2 = sd["2.weight"].numpy().T.astype(np.float32).copy()  # [32, 32]
+        self.b2 = sd["2.bias"].numpy().astype(np.float32)            # [32]
+        self.w3 = sd["4.weight"].numpy().T.astype(np.float32).copy()  # [32, 1]
+        self.b3 = sd["4.bias"].numpy().astype(np.float32)            # [1]
+        return self
 
-    def refresh_from_scratch(self, board: chess.Board):
-        white_indices, black_indices = get_halfkp_indices(board)
+    @staticmethod
+    def _scrl(x):
+        # squared clipped relu; clip returns a fresh array so callers' inputs are safe
+        c = np.clip(x, 0.0, 1.0)
+        c *= c
+        return c
 
-        self.white_state = np.copy(self.bias)
-        self.black_state = np.copy(self.bias)
+    def evaluate(self, stm_vec, opp_vec) -> float:
+        d = stm_vec.shape[0]                 # transformer width
+        a_stm = self._scrl(stm_vec)
+        a_opp = self._scrl(opp_vec)
 
-        for idx in white_indices:
-            if idx < 41024:
-                self.white_state += self.weights[idx]
-        for idx in black_indices:
-            if idx < 41024:
-                self.black_state += self.weights[idx]
+        # row 0 = [stm, opp], row 1 = [opp, stm]  -> one matmul yields both terms
+        x = np.empty((2, d * 2), dtype=np.float32)
+        x[0, :d] = a_stm
+        x[0, d:] = a_opp
+        x[1, :d] = a_opp
+        x[1, d:] = a_stm
 
-    def update_move(self, removed_white, added_white, removed_black, added_black):
-        for idx in removed_white:
-            if idx < 41024:
-                self.white_state -= self.weights[idx]
-        for idx in added_white:
-            if idx < 41024:
-                self.white_state += self.weights[idx]
+        h = self._scrl(x @ self.w1 + self.b1)
+        h = self._scrl(h @ self.w2 + self.b2)
+        out = h @ self.w3 + self.b3   # [2, 1]
+        return float(out[0, 0] - out[1, 0])
 
-        for idx in removed_black:
-            if idx < 41024:
-                self.black_state -= self.weights[idx]
-        for idx in added_black:
-            if idx < 41024:
-                self.black_state += self.weights[idx]
 
-    def to_tensor(self):
-        w_tensor = torch.from_numpy(self.white_state).unsqueeze(0)
-        b_tensor = torch.from_numpy(self.black_state).unsqueeze(0)
+class Accumulator:
+    """
+    Holds the two perspective accumulators (pre-activation) for one position.
+    Ideally should be incrementally updated but in python that is actually slower
+    """
 
-        return w_tensor, b_tensor
+    def __init__(self, net: NNUEInference):
+        self.net = net
+        self.white = net.ft_bias.copy()
+        self.black = net.ft_bias.copy()
+
+    def refresh(self, board: chess.Board):
+        net = self.net
+        res = get_halfkp_indices(board)
+        if res is None:
+            self.white = net.ft_bias.copy()
+            self.black = net.ft_bias.copy()
+            return
+        w_idx, b_idx = res
+        W = net.ft_weight
+        self.white = net.ft_bias + W[w_idx].sum(axis=0)
+        self.black = net.ft_bias + W[b_idx].sum(axis=0)

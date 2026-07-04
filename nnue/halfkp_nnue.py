@@ -1,4 +1,3 @@
-import chess
 import torch
 import torch.nn as nn
 
@@ -11,7 +10,9 @@ class HalfKPNNUE(nn.Module):
     def __init__(self, input_features=41024, transformer_outputs=256):
         super(HalfKPNNUE, self).__init__()
 
-        self.feature_transformer = nn.Linear(input_features, transformer_outputs)
+        self.feature_transformer = nn.EmbeddingBag(input_features, transformer_outputs, mode='sum', sparse=False)
+        nn.init.normal_(self.feature_transformer.weight, std=0.01)
+        self.ft_bias = nn.Parameter(torch.zeros(transformer_outputs))
         self.ft_activation = SquaredClippedRelu()
 
         self.hidden_layers = nn.Sequential(
@@ -19,12 +20,12 @@ class HalfKPNNUE(nn.Module):
             SquaredClippedRelu(),
             nn.Linear(32, 32),
             SquaredClippedRelu(),
-            nn.Linear(32, 1) # output
+            nn.Linear(32, 1)
         )
 
-    def forward(self, white_features, black_features, stm):
-        white_t = self.ft_activation(self.feature_transformer(white_features))
-        black_t = self.ft_activation(self.feature_transformer(black_features))
+    def forward(self, white_indices, white_offsets, black_indices, black_offsets, stm):
+        white_t = self.ft_activation(self.feature_transformer(white_indices, white_offsets) + self.ft_bias)
+        black_t = self.ft_activation(self.feature_transformer(black_indices, black_offsets) + self.ft_bias)
 
         # Iz white perspektive
         x_white = torch.cat((white_t, black_t), dim=1)
@@ -41,7 +42,11 @@ class HalfKPNNUE(nn.Module):
         return output
 
     def forward_from_accumulator(self, white_acc, black_acc):
-        w_activated = self.ft_activation(white_acc)
-        b_activated = self.ft_activation(black_acc)
+        w_activated = self.ft_activation(white_acc + self.ft_bias)
+        b_activated = self.ft_activation(black_acc + self.ft_bias)
         x = torch.cat((w_activated, b_activated), 1)
         return self.hidden_layers(x)
+
+    @property
+    def ft_weight(self):
+        return self.feature_transformer.weight

@@ -1,0 +1,231 @@
+[Batch 1000] -> train MSE: 0.062696 MAE: 0.138026 | val MSE: 0.022843 MAE: 0.067462 | Brzina: 51.4 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b1000_mse0.022843.pt
+[Batch 2000] -> train MSE: 0.048786 MAE: 0.119793 | val MSE: 0.022871 MAE: 0.071825 | Brzina: 75.6 batch/s | LR: 1.00e-03
+[Batch 3000] -> train MSE: 0.045230 MAE: 0.114602 | val MSE: 0.021188 MAE: 0.063386 | Brzina: 76.5 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b3000_mse0.021188.pt
+[Batch 4000] -> train MSE: 0.042167 MAE: 0.108502 | val MSE: 0.020565 MAE: 0.061654 | Brzina: 79.5 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b4000_mse0.020565.pt
+[Batch 5000] -> train MSE: 0.045197 MAE: 0.112658 | val MSE: 0.020451 MAE: 0.062994 | Brzina: 78.0 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b5000_mse0.020451.pt
+[Batch 6000] -> train MSE: 0.040702 MAE: 0.105172 | val MSE: 0.020021 MAE: 0.060188 | Brzina: 77.9 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b6000_mse0.020021.pt
+[Batch 7000] -> train MSE: 0.039243 MAE: 0.103771 | val MSE: 0.019288 MAE: 0.059552 | Brzina: 79.7 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b7000_mse0.019288.pt
+[Batch 8000] -> train MSE: 0.038069 MAE: 0.100530 | val MSE: 0.019193 MAE: 0.059452 | Brzina: 75.7 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b8000_mse0.019193.pt
+[Batch 9000] -> train MSE: 0.037305 MAE: 0.099546 | val MSE: 0.019541 MAE: 0.059789 | Brzina: 76.5 batch/s | LR: 1.00e-03
+[Batch 10000] -> train MSE: 0.040253 MAE: 0.104582 | val MSE: 0.019513 MAE: 0.060294 | Brzina: 80.9 batch/s | LR: 1.00e-03
+[Batch 11000] -> train MSE: 0.037550 MAE: 0.099325 | val MSE: 0.018893 MAE: 0.059559 | Brzina: 77.0 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b11000_mse0.018893.pt
+[Batch 12000] -> train MSE: 0.037966 MAE: 0.100934 | val MSE: 0.019163 MAE: 0.058916 | Brzina: 68.1 batch/s | LR: 1.00e-03
+[Batch 13000] -> train MSE: 0.037969 MAE: 0.100874 | val MSE: 0.018844 MAE: 0.059025 | Brzina: 70.3 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b13000_mse0.018844.pt
+[Batch 14000] -> train MSE: 0.037098 MAE: 0.098826 | val MSE: 0.018820 MAE: 0.060014 | Brzina: 68.6 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b14000_mse0.018820.pt
+[Batch 15000] -> train MSE: 0.037076 MAE: 0.098779 | val MSE: 0.018598 MAE: 0.057990 | Brzina: 71.3 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b15000_mse0.018598.pt
+[Batch 16000] -> train MSE: 0.040480 MAE: 0.104455 | val MSE: 0.018715 MAE: 0.058706 | Brzina: 69.5 batch/s | LR: 1.00e-03
+[Batch 17000] -> train MSE: 0.036172 MAE: 0.097466 | val MSE: 0.018297 MAE: 0.058362 | Brzina: 70.7 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b17000_mse0.018297.pt
+[Batch 18000] -> train MSE: 0.037526 MAE: 0.099415 | val MSE: 0.018577 MAE: 0.057632 | Brzina: 71.8 batch/s | LR: 1.00e-03
+[Batch 19000] -> train MSE: 0.037409 MAE: 0.100726 | val MSE: 0.018473 MAE: 0.058279 | Brzina: 71.4 batch/s | LR: 1.00e-03
+[Batch 20000] -> train MSE: 0.037911 MAE: 0.101000 | val MSE: 0.018478 MAE: 0.058351 | Brzina: 70.8 batch/s | LR: 1.00e-03
+[Batch 21000] -> train MSE: 0.034824 MAE: 0.095552 | val MSE: 0.018709 MAE: 0.058791 | Brzina: 73.6 batch/s | LR: 1.00e-03
+[Batch 22000] -> train MSE: 0.037681 MAE: 0.099663 | val MSE: 0.018415 MAE: 0.058628 | Brzina: 71.8 batch/s | LR: 1.00e-03
+[Batch 23000] -> train MSE: 0.038589 MAE: 0.101974 | val MSE: 0.018194 MAE: 0.058386 | Brzina: 71.6 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b23000_mse0.018194.pt
+[Batch 24000] -> train MSE: 0.035654 MAE: 0.097269 | val MSE: 0.018385 MAE: 0.057769 | Brzina: 70.2 batch/s | LR: 1.00e-03
+[Batch 25000] -> train MSE: 0.037254 MAE: 0.099290 | val MSE: 0.018300 MAE: 0.057968 | Brzina: 71.0 batch/s | LR: 1.00e-03
+[Batch 26000] -> train MSE: 0.038220 MAE: 0.100880 | val MSE: 0.018844 MAE: 0.058092 | Brzina: 71.5 batch/s | LR: 1.00e-03
+[Batch 27000] -> train MSE: 0.038139 MAE: 0.100942 | val MSE: 0.018041 MAE: 0.057919 | Brzina: 74.5 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b27000_mse0.018041.pt
+[Batch 28000] -> train MSE: 0.036974 MAE: 0.099079 | val MSE: 0.018054 MAE: 0.057878 | Brzina: 70.0 batch/s | LR: 1.00e-03
+[Batch 29000] -> train MSE: 0.034691 MAE: 0.094439 | val MSE: 0.018037 MAE: 0.057391 | Brzina: 69.4 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b29000_mse0.018037.pt
+[Batch 30000] -> train MSE: 0.035449 MAE: 0.095800 | val MSE: 0.018050 MAE: 0.057318 | Brzina: 69.7 batch/s | LR: 1.00e-03
+[Batch 31000] -> train MSE: 0.040667 MAE: 0.104896 | val MSE: 0.017771 MAE: 0.056945 | Brzina: 71.5 batch/s | LR: 1.00e-03
+   >> Saved best model: models/nnue_e1_b31000_mse0.017771.pt
+[Batch 32000] -> train MSE: 0.041013 MAE: 0.107099 | val MSE: 0.017822 MAE: 0.057240 | Brzina: 63.2 batch/s | LR: 1.00e-03
+[Batch 33000] -> train MSE: 0.038870 MAE: 0.104218 | val MSE: 0.018132 MAE: 0.058522 | Brzina: 60.5 batch/s | LR: 1.00e-03
+[Batch 34000] -> train MSE: 0.036829 MAE: 0.100270 | val MSE: 0.018046 MAE: 0.059229 | Brzina: 60.7 batch/s | LR: 1.00e-03
+[Batch 35000] -> train MSE: 0.037338 MAE: 0.101312 | val MSE: 0.018194 MAE: 0.057516 | Brzina: 61.4 batch/s | LR: 1.00e-03
+
+=> Epoha [1/10] ZAVRSENA!
+   Ukupno procesirano batch-eva: 35162 (Ukupno pozicija: 288047104)
+   Prosecan train MSE (epoha): 0.039360 | MAE: 0.103134
+   Val MSE: 0.018081 | MAE: 0.059540
+   Najbolji val MSE do sada: 0.017771
+   Vreme trajanja epohe: 498.2 sekundi
+==================================================
+
+[Batch 1000] -> train MSE: 0.034907 MAE: 0.095081 | val MSE: 0.017778 MAE: 0.056429 | Brzina: 69.9 batch/s | LR: 1.00e-03
+[Batch 2000] -> train MSE: 0.034252 MAE: 0.094584 | val MSE: 0.018012 MAE: 0.057568 | Brzina: 70.7 batch/s | LR: 1.00e-03
+[Batch 3000] -> train MSE: 0.036143 MAE: 0.098114 | val MSE: 0.018029 MAE: 0.056287 | Brzina: 72.2 batch/s | LR: 1.00e-03
+[Batch 4000] -> train MSE: 0.036595 MAE: 0.098451 | val MSE: 0.018093 MAE: 0.056392 | Brzina: 73.5 batch/s | LR: 1.00e-03
+[Batch 5000] -> train MSE: 0.034927 MAE: 0.096261 | val MSE: 0.017913 MAE: 0.057158 | Brzina: 71.3 batch/s | LR: 1.00e-03
+[Batch 6000] -> train MSE: 0.035030 MAE: 0.096179 | val MSE: 0.017922 MAE: 0.056965 | Brzina: 71.6 batch/s | LR: 1.00e-03
+[Batch 7000] -> train MSE: 0.033560 MAE: 0.092975 | val MSE: 0.018053 MAE: 0.057577 | Brzina: 73.9 batch/s | LR: 7.00e-04
+[Batch 8000] -> train MSE: 0.035099 MAE: 0.096660 | val MSE: 0.017873 MAE: 0.056948 | Brzina: 72.4 batch/s | LR: 7.00e-04
+[Batch 9000] -> train MSE: 0.034117 MAE: 0.094746 | val MSE: 0.017731 MAE: 0.056086 | Brzina: 71.9 batch/s | LR: 7.00e-04
+   >> Saved best model: models/nnue_e2_b9000_mse0.017731.pt
+[Batch 10000] -> train MSE: 0.033781 MAE: 0.093303 | val MSE: 0.017700 MAE: 0.055947 | Brzina: 70.6 batch/s | LR: 7.00e-04
+   >> Saved best model: models/nnue_e2_b10000_mse0.017700.pt
+[Batch 11000] -> train MSE: 0.034605 MAE: 0.094407 | val MSE: 0.017742 MAE: 0.056338 | Brzina: 68.8 batch/s | LR: 7.00e-04
+[Batch 12000] -> train MSE: 0.035321 MAE: 0.095683 | val MSE: 0.017623 MAE: 0.056205 | Brzina: 73.1 batch/s | LR: 7.00e-04
+   >> Saved best model: models/nnue_e2_b12000_mse0.017623.pt
+[Batch 13000] -> train MSE: 0.033760 MAE: 0.093144 | val MSE: 0.017777 MAE: 0.057063 | Brzina: 70.5 batch/s | LR: 7.00e-04
+[Batch 14000] -> train MSE: 0.033899 MAE: 0.094130 | val MSE: 0.017385 MAE: 0.056092 | Brzina: 70.8 batch/s | LR: 7.00e-04
+   >> Saved best model: models/nnue_e2_b14000_mse0.017385.pt
+[Batch 15000] -> train MSE: 0.036576 MAE: 0.097563 | val MSE: 0.017559 MAE: 0.055688 | Brzina: 70.7 batch/s | LR: 7.00e-04
+[Batch 16000] -> train MSE: 0.035001 MAE: 0.096063 | val MSE: 0.017377 MAE: 0.055711 | Brzina: 71.5 batch/s | LR: 7.00e-04
+   >> Saved best model: models/nnue_e2_b16000_mse0.017377.pt
+[Batch 17000] -> train MSE: 0.033285 MAE: 0.092536 | val MSE: 0.017336 MAE: 0.056019 | Brzina: 69.6 batch/s | LR: 7.00e-04
+   >> Saved best model: models/nnue_e2_b17000_mse0.017336.pt
+[Batch 18000] -> train MSE: 0.034198 MAE: 0.093995 | val MSE: 0.017480 MAE: 0.056111 | Brzina: 70.8 batch/s | LR: 7.00e-04
+[Batch 19000] -> train MSE: 0.035088 MAE: 0.095012 | val MSE: 0.017249 MAE: 0.055064 | Brzina: 70.8 batch/s | LR: 7.00e-04
+   >> Saved best model: models/nnue_e2_b19000_mse0.017249.pt
+[Batch 20000] -> train MSE: 0.036718 MAE: 0.098026 | val MSE: 0.017607 MAE: 0.056638 | Brzina: 69.0 batch/s | LR: 7.00e-04
+[Batch 21000] -> train MSE: 0.034548 MAE: 0.094620 | val MSE: 0.018142 MAE: 0.056513 | Brzina: 73.0 batch/s | LR: 7.00e-04
+[Batch 22000] -> train MSE: 0.035228 MAE: 0.095227 | val MSE: 0.017661 MAE: 0.056040 | Brzina: 71.3 batch/s | LR: 7.00e-04
+[Batch 23000] -> train MSE: 0.034908 MAE: 0.095380 | val MSE: 0.018407 MAE: 0.057206 | Brzina: 71.0 batch/s | LR: 7.00e-04
+[Batch 24000] -> train MSE: 0.034115 MAE: 0.093351 | val MSE: 0.017477 MAE: 0.055517 | Brzina: 73.2 batch/s | LR: 7.00e-04
+[Batch 25000] -> train MSE: 0.033560 MAE: 0.092919 | val MSE: 0.017416 MAE: 0.055291 | Brzina: 70.0 batch/s | LR: 7.00e-04
+[Batch 26000] -> train MSE: 0.035162 MAE: 0.096455 | val MSE: 0.017328 MAE: 0.055038 | Brzina: 71.1 batch/s | LR: 7.00e-04
+[Batch 27000] -> train MSE: 0.034286 MAE: 0.094246 | val MSE: 0.017543 MAE: 0.056457 | Brzina: 73.4 batch/s | LR: 7.00e-04
+[Batch 28000] -> train MSE: 0.033331 MAE: 0.092895 | val MSE: 0.017266 MAE: 0.055980 | Brzina: 71.3 batch/s | LR: 7.00e-04
+[Batch 29000] -> train MSE: 0.033959 MAE: 0.093346 | val MSE: 0.017049 MAE: 0.055673 | Brzina: 71.0 batch/s | LR: 7.00e-04
+   >> Saved best model: models/nnue_e2_b29000_mse0.017049.pt
+[Batch 30000] -> train MSE: 0.031854 MAE: 0.088701 | val MSE: 0.017250 MAE: 0.055526 | Brzina: 70.8 batch/s | LR: 7.00e-04
+[Batch 31000] -> train MSE: 0.032661 MAE: 0.091444 | val MSE: 0.017099 MAE: 0.055891 | Brzina: 70.1 batch/s | LR: 7.00e-04
+[Batch 32000] -> train MSE: 0.034618 MAE: 0.096300 | val MSE: 0.017197 MAE: 0.055618 | Brzina: 64.5 batch/s | LR: 7.00e-04
+[Batch 33000] -> train MSE: 0.035675 MAE: 0.098475 | val MSE: 0.017425 MAE: 0.057136 | Brzina: 62.0 batch/s | LR: 7.00e-04
+[Batch 34000] -> train MSE: 0.035064 MAE: 0.098101 | val MSE: 0.017377 MAE: 0.056514 | Brzina: 61.7 batch/s | LR: 7.00e-04
+[Batch 35000] -> train MSE: 0.035200 MAE: 0.098139 | val MSE: 0.017398 MAE: 0.056853 | Brzina: 61.8 batch/s | LR: 7.00e-04
+
+=> Epoha [2/10] ZAVRSENA!
+   Ukupno procesirano batch-eva: 35162 (Ukupno pozicija: 288047104)
+   Prosecan train MSE (epoha): 0.034600 | MAE: 0.095048
+   Val MSE: 0.017613 | MAE: 0.056721
+   Najbolji val MSE do sada: 0.017049
+   Vreme trajanja epohe: 501.6 sekundi
+==================================================
+
+[Batch 1000] -> train MSE: 0.033057 MAE: 0.093354 | val MSE: 0.017824 MAE: 0.056096 | Brzina: 70.4 batch/s | LR: 7.00e-04
+[Batch 2000] -> train MSE: 0.032643 MAE: 0.092591 | val MSE: 0.017444 MAE: 0.055365 | Brzina: 71.5 batch/s | LR: 7.00e-04
+[Batch 3000] -> train MSE: 0.033318 MAE: 0.093549 | val MSE: 0.017565 MAE: 0.055601 | Brzina: 72.0 batch/s | LR: 7.00e-04
+[Batch 4000] -> train MSE: 0.034613 MAE: 0.095681 | val MSE: 0.017442 MAE: 0.055729 | Brzina: 73.6 batch/s | LR: 7.00e-04
+[Batch 5000] -> train MSE: 0.034751 MAE: 0.095277 | val MSE: 0.017436 MAE: 0.055430 | Brzina: 70.9 batch/s | LR: 4.90e-04
+[Batch 6000] -> train MSE: 0.032134 MAE: 0.092082 | val MSE: 0.017513 MAE: 0.055451 | Brzina: 71.4 batch/s | LR: 4.90e-04
+[Batch 7000] -> train MSE: 0.032182 MAE: 0.091223 | val MSE: 0.017513 MAE: 0.055210 | Brzina: 74.0 batch/s | LR: 4.90e-04
+[Batch 8000] -> train MSE: 0.034310 MAE: 0.094736 | val MSE: 0.017305 MAE: 0.055245 | Brzina: 72.1 batch/s | LR: 4.90e-04
+[Batch 9000] -> train MSE: 0.033049 MAE: 0.092620 | val MSE: 0.017226 MAE: 0.054947 | Brzina: 71.5 batch/s | LR: 4.90e-04
+[Batch 10000] -> train MSE: 0.032439 MAE: 0.091397 | val MSE: 0.017324 MAE: 0.054849 | Brzina: 72.8 batch/s | LR: 4.90e-04
+[Batch 11000] -> train MSE: 0.031979 MAE: 0.090115 | val MSE: 0.017354 MAE: 0.055544 | Brzina: 71.2 batch/s | LR: 4.90e-04
+[Batch 12000] -> train MSE: 0.033021 MAE: 0.093713 | val MSE: 0.017451 MAE: 0.055037 | Brzina: 73.0 batch/s | LR: 4.90e-04
+[Batch 13000] -> train MSE: 0.034772 MAE: 0.094597 | val MSE: 0.017310 MAE: 0.055383 | Brzina: 71.2 batch/s | LR: 4.90e-04
+[Batch 14000] -> train MSE: 0.033530 MAE: 0.093406 | val MSE: 0.017294 MAE: 0.055545 | Brzina: 71.2 batch/s | LR: 4.90e-04
+[Batch 15000] -> train MSE: 0.035966 MAE: 0.098235 | val MSE: 0.017258 MAE: 0.055604 | Brzina: 74.1 batch/s | LR: 4.90e-04
+[Batch 16000] -> train MSE: 0.036421 MAE: 0.098453 | val MSE: 0.017284 MAE: 0.055512 | Brzina: 72.2 batch/s | LR: 4.90e-04
+[Batch 17000] -> train MSE: 0.035132 MAE: 0.095716 | val MSE: 0.017136 MAE: 0.054941 | Brzina: 72.1 batch/s | LR: 4.90e-04
+[Batch 18000] -> train MSE: 0.034357 MAE: 0.094540 | val MSE: 0.017284 MAE: 0.055240 | Brzina: 73.7 batch/s | LR: 4.90e-04
+[Batch 19000] -> train MSE: 0.034744 MAE: 0.096759 | val MSE: 0.017232 MAE: 0.054959 | Brzina: 71.7 batch/s | LR: 3.43e-04
+[Batch 20000] -> train MSE: 0.035638 MAE: 0.097938 | val MSE: 0.017191 MAE: 0.055182 | Brzina: 72.3 batch/s | LR: 3.43e-04
+[Batch 21000] -> train MSE: 0.034607 MAE: 0.095497 | val MSE: 0.017243 MAE: 0.054884 | Brzina: 74.0 batch/s | LR: 3.43e-04
+[Batch 22000] -> train MSE: 0.033570 MAE: 0.092724 | val MSE: 0.017109 MAE: 0.055046 | Brzina: 67.6 batch/s | LR: 3.43e-04
+[Batch 23000] -> train MSE: 0.034195 MAE: 0.094463 | val MSE: 0.016990 MAE: 0.054867 | Brzina: 65.0 batch/s | LR: 3.43e-04
+   >> Saved best model: models/nnue_e3_b23000_mse0.016990.pt
+[Batch 24000] -> train MSE: 0.034670 MAE: 0.095693 | val MSE: 0.017029 MAE: 0.054896 | Brzina: 66.1 batch/s | LR: 3.43e-04
+[Batch 25000] -> train MSE: 0.035617 MAE: 0.096710 | val MSE: 0.017141 MAE: 0.054735 | Brzina: 65.5 batch/s | LR: 3.43e-04
+[Batch 26000] -> train MSE: 0.032740 MAE: 0.091706 | val MSE: 0.017107 MAE: 0.054887 | Brzina: 64.7 batch/s | LR: 3.43e-04
+[Batch 27000] -> train MSE: 0.035834 MAE: 0.097909 | val MSE: 0.017067 MAE: 0.054875 | Brzina: 66.6 batch/s | LR: 3.43e-04
+[Batch 28000] -> train MSE: 0.032129 MAE: 0.090736 | val MSE: 0.017070 MAE: 0.054993 | Brzina: 64.6 batch/s | LR: 3.43e-04
+[Batch 29000] -> train MSE: 0.032523 MAE: 0.091504 | val MSE: 0.017050 MAE: 0.054910 | Brzina: 65.0 batch/s | LR: 3.43e-04
+[Batch 30000] -> train MSE: 0.032906 MAE: 0.092234 | val MSE: 0.017130 MAE: 0.055293 | Brzina: 71.5 batch/s | LR: 3.43e-04
+[Batch 31000] -> train MSE: 0.032829 MAE: 0.091593 | val MSE: 0.017101 MAE: 0.054851 | Brzina: 72.5 batch/s | LR: 3.43e-04
+[Batch 32000] -> train MSE: 0.023055 MAE: 0.074639 | val MSE: 0.016988 MAE: 0.054895 | Brzina: 64.0 batch/s | LR: 3.43e-04
+   >> Saved best model: models/nnue_e3_b32000_mse0.016988.pt
+[Batch 33000] -> train MSE: 0.019445 MAE: 0.067870 | val MSE: 0.016838 MAE: 0.054383 | Brzina: 59.3 batch/s | LR: 3.43e-04
+   >> Saved best model: models/nnue_e3_b33000_mse0.016838.pt
+[Batch 34000] -> train MSE: 0.019244 MAE: 0.067540 | val MSE: 0.016935 MAE: 0.054205 | Brzina: 59.5 batch/s | LR: 3.43e-04
+[Batch 35000] -> train MSE: 0.018859 MAE: 0.066581 | val MSE: 0.017061 MAE: 0.054815 | Brzina: 58.7 batch/s | LR: 3.43e-04
+
+=> Epoha [3/10] ZAVRSENA!
+   Ukupno procesirano batch-eva: 35162 (Ukupno pozicija: 288047104)
+   Prosecan train MSE (epoha): 0.032233 | MAE: 0.091128
+   Val MSE: 0.016995 | MAE: 0.054811
+   Najbolji val MSE do sada: 0.016838
+   Vreme trajanja epohe: 509.5 sekundi
+==================================================
+
+[Batch 1000] -> train MSE: 0.029755 MAE: 0.086908 | val MSE: 0.017063 MAE: 0.054452 | Brzina: 73.5 batch/s | LR: 3.43e-04
+[Batch 2000] -> train MSE: 0.029775 MAE: 0.087559 | val MSE: 0.016887 MAE: 0.054174 | Brzina: 73.5 batch/s | LR: 3.43e-04
+[Batch 3000] -> train MSE: 0.031234 MAE: 0.088646 | val MSE: 0.016966 MAE: 0.054379 | Brzina: 73.0 batch/s | LR: 3.43e-04
+[Batch 4000] -> train MSE: 0.030123 MAE: 0.087361 | val MSE: 0.017044 MAE: 0.054146 | Brzina: 76.0 batch/s | LR: 3.43e-04
+[Batch 5000] -> train MSE: 0.030642 MAE: 0.088239 | val MSE: 0.017181 MAE: 0.054920 | Brzina: 76.5 batch/s | LR: 3.43e-04
+[Batch 6000] -> train MSE: 0.030332 MAE: 0.088552 | val MSE: 0.017074 MAE: 0.054499 | Brzina: 76.8 batch/s | LR: 3.43e-04
+[Batch 7000] -> train MSE: 0.029948 MAE: 0.087101 | val MSE: 0.016871 MAE: 0.054016 | Brzina: 78.5 batch/s | LR: 3.43e-04
+[Batch 8000] -> train MSE: 0.030245 MAE: 0.087446 | val MSE: 0.017038 MAE: 0.054744 | Brzina: 75.9 batch/s | LR: 3.43e-04
+[Batch 9000] -> train MSE: 0.030802 MAE: 0.088445 | val MSE: 0.017037 MAE: 0.054373 | Brzina: 75.8 batch/s | LR: 2.40e-04
+[Batch 10000] -> train MSE: 0.029549 MAE: 0.086495 | val MSE: 0.017113 MAE: 0.054595 | Brzina: 79.4 batch/s | LR: 2.40e-04
+[Batch 11000] -> train MSE: 0.029894 MAE: 0.086652 | val MSE: 0.016946 MAE: 0.054320 | Brzina: 76.3 batch/s | LR: 2.40e-04
+[Batch 12000] -> train MSE: 0.031807 MAE: 0.090372 | val MSE: 0.017316 MAE: 0.055053 | Brzina: 78.4 batch/s | LR: 2.40e-04
+[Batch 13000] -> train MSE: 0.028761 MAE: 0.084235 | val MSE: 0.017063 MAE: 0.054518 | Brzina: 78.0 batch/s | LR: 2.40e-04
+[Batch 14000] -> train MSE: 0.031353 MAE: 0.089550 | val MSE: 0.016908 MAE: 0.054697 | Brzina: 77.2 batch/s | LR: 2.40e-04
+[Batch 15000] -> train MSE: 0.030013 MAE: 0.087530 | val MSE: 0.016836 MAE: 0.054143 | Brzina: 78.8 batch/s | LR: 2.40e-04
+   >> Saved best model: models/nnue_e4_b15000_mse0.016836.pt
+[Batch 16000] -> train MSE: 0.032140 MAE: 0.091270 | val MSE: 0.016753 MAE: 0.054111 | Brzina: 77.5 batch/s | LR: 2.40e-04
+   >> Saved best model: models/nnue_e4_b16000_mse0.016753.pt
+[Batch 17000] -> train MSE: 0.030700 MAE: 0.087510 | val MSE: 0.016782 MAE: 0.054086 | Brzina: 78.1 batch/s | LR: 2.40e-04
+[Batch 18000] -> train MSE: 0.028480 MAE: 0.083760 | val MSE: 0.016716 MAE: 0.054178 | Brzina: 80.3 batch/s | LR: 2.40e-04
+   >> Saved best model: models/nnue_e4_b18000_mse0.016716.pt
+[Batch 19000] -> train MSE: 0.031504 MAE: 0.090152 | val MSE: 0.016758 MAE: 0.054118 | Brzina: 77.1 batch/s | LR: 2.40e-04
+[Batch 20000] -> train MSE: 0.030598 MAE: 0.087875 | val MSE: 0.016757 MAE: 0.054092 | Brzina: 79.6 batch/s | LR: 2.40e-04
+[Batch 21000] -> train MSE: 0.032961 MAE: 0.092739 | val MSE: 0.017016 MAE: 0.054746 | Brzina: 82.9 batch/s | LR: 2.40e-04
+[Batch 22000] -> train MSE: 0.029481 MAE: 0.085594 | val MSE: 0.016945 MAE: 0.054210 | Brzina: 78.9 batch/s | LR: 2.40e-04
+[Batch 23000] -> train MSE: 0.031141 MAE: 0.089303 | val MSE: 0.016912 MAE: 0.054573 | Brzina: 79.9 batch/s | LR: 2.40e-04
+[Batch 24000] -> train MSE: 0.030771 MAE: 0.089072 | val MSE: 0.016899 MAE: 0.054362 | Brzina: 82.9 batch/s | LR: 2.40e-04
+[Batch 25000] -> train MSE: 0.029097 MAE: 0.085850 | val MSE: 0.016855 MAE: 0.054444 | Brzina: 80.1 batch/s | LR: 2.40e-04
+[Batch 26000] -> train MSE: 0.031479 MAE: 0.090100 | val MSE: 0.016895 MAE: 0.054395 | Brzina: 79.5 batch/s | LR: 2.40e-04
+[Batch 27000] -> train MSE: 0.030342 MAE: 0.086981 | val MSE: 0.016860 MAE: 0.054400 | Brzina: 83.4 batch/s | LR: 2.40e-04
+[Batch 28000] -> train MSE: 0.031633 MAE: 0.089430 | val MSE: 0.016887 MAE: 0.054298 | Brzina: 80.8 batch/s | LR: 2.40e-04
+[Batch 29000] -> train MSE: 0.031697 MAE: 0.090068 | val MSE: 0.016955 MAE: 0.054253 | Brzina: 80.2 batch/s | LR: 1.68e-04
+[Batch 30000] -> train MSE: 0.029975 MAE: 0.087289 | val MSE: 0.016933 MAE: 0.054091 | Brzina: 83.6 batch/s | LR: 1.68e-04
+[Batch 31000] -> train MSE: 0.029702 MAE: 0.086743 | val MSE: 0.016938 MAE: 0.054185 | Brzina: 80.4 batch/s | LR: 1.68e-04
+[Batch 32000] -> train MSE: 0.029703 MAE: 0.087874 | val MSE: 0.016963 MAE: 0.054815 | Brzina: 70.5 batch/s | LR: 1.68e-04
+[Batch 33000] -> train MSE: 0.034259 MAE: 0.096532 | val MSE: 0.016874 MAE: 0.054300 | Brzina: 70.5 batch/s | LR: 1.68e-04
+[Batch 34000] -> train MSE: 0.029806 MAE: 0.088675 | val MSE: 0.016935 MAE: 0.054528 | Brzina: 70.0 batch/s | LR: 1.68e-04
+[Batch 35000] -> train MSE: 0.032496 MAE: 0.094163 | val MSE: 0.017122 MAE: 0.054826 | Brzina: 70.9 batch/s | LR: 1.68e-04
+
+=> Epoha [4/10] ZAVRSENA!
+   Ukupno procesirano batch-eva: 35162 (Ukupno pozicija: 288047104)
+   Prosecan train MSE (epoha): 0.030631 | MAE: 0.088458
+   Val MSE: 0.017054 | MAE: 0.054601
+   Najbolji val MSE do sada: 0.016716
+   Vreme trajanja epohe: 454.6 sekundi
+==================================================
+
+[Batch 1000] -> train MSE: 0.029626 MAE: 0.086792 | val MSE: 0.017064 MAE: 0.054143 | Brzina: 79.8 batch/s | LR: 1.68e-04
+[Batch 2000] -> train MSE: 0.029907 MAE: 0.087269 | val MSE: 0.016994 MAE: 0.054025 | Brzina: 80.3 batch/s | LR: 1.68e-04
+[Batch 3000] -> train MSE: 0.032000 MAE: 0.091407 | val MSE: 0.016990 MAE: 0.053893 | Brzina: 81.5 batch/s | LR: 1.68e-04
+[Batch 4000] -> train MSE: 0.029837 MAE: 0.087328 | val MSE: 0.017112 MAE: 0.054272 | Brzina: 83.9 batch/s | LR: 1.68e-04
+[Batch 5000] -> train MSE: 0.029751 MAE: 0.087652 | val MSE: 0.017016 MAE: 0.054104 | Brzina: 80.8 batch/s | LR: 1.68e-04
+[Batch 6000] -> train MSE: 0.031202 MAE: 0.090396 | val MSE: 0.017040 MAE: 0.053997 | Brzina: 80.8 batch/s | LR: 1.68e-04
+[Batch 7000] -> train MSE: 0.027603 MAE: 0.083486 | val MSE: 0.017017 MAE: 0.054153 | Brzina: 82.8 batch/s | LR: 1.68e-04
+[Batch 8000] -> train MSE: 0.030321 MAE: 0.088132 | val MSE: 0.017066 MAE: 0.054206 | Brzina: 80.9 batch/s | LR: 1.18e-04
+[Batch 9000] -> train MSE: 0.030027 MAE: 0.087745 | val MSE: 0.017069 MAE: 0.054062 | Brzina: 80.8 batch/s | LR: 1.18e-04
+[Batch 10000] -> train MSE: 0.030856 MAE: 0.088898 | val MSE: 0.016990 MAE: 0.053952 | Brzina: 84.0 batch/s | LR: 1.18e-04
+[Batch 11000] -> train MSE: 0.030548 MAE: 0.088636 | val MSE: 0.016955 MAE: 0.054138 | Brzina: 80.8 batch/s | LR: 1.18e-04
+[Batch 12000] -> train MSE: 0.032598 MAE: 0.092425 | val MSE: 0.016928 MAE: 0.053749 | Brzina: 83.0 batch/s | LR: 1.18e-04
+[Batch 13000] -> train MSE: 0.032008 MAE: 0.091590 | val MSE: 0.017011 MAE: 0.054030 | Brzina: 82.7 batch/s | LR: 1.18e-04
+[Batch 14000] -> train MSE: 0.030429 MAE: 0.088193 | val MSE: 0.017062 MAE: 0.054147 | Brzina: 80.7 batch/s | LR: 1.18e-04
+[Batch 15000] -> train MSE: 0.030985 MAE: 0.089555 | val MSE: 0.017065 MAE: 0.053952 | Brzina: 83.6 batch/s | LR: 1.18e-04
+[Batch 16000] -> train MSE: 0.029162 MAE: 0.085946 | val MSE: 0.017036 MAE: 0.054168 | Brzina: 80.2 batch/s | LR: 1.18e-04
+[Batch 17000] -> train MSE: 0.028867 MAE: 0.085202 | val MSE: 0.017058 MAE: 0.054239 | Brzina: 80.5 batch/s | LR: 1.18e-04
+[Batch 18000] -> train MSE: 0.033487 MAE: 0.093615 | val MSE: 0.016930 MAE: 0.053982 | Brzina: 84.2 batch/s | LR: 1.18e-04
+[Batch 19000] -> train MSE: 0.032801 MAE: 0.092385 | val MSE: 0.017027 MAE: 0.053983 | Brzina: 81.3 batch/s | LR: 1.18e-04
+[Batch 20000] -> train MSE: 0.030182 MAE: 0.087010 | val MSE: 0.017086 MAE: 0.053896 | Brzina: 80.8 batch/s | LR: 1.18e-04
+[Batch 21000] -> train MSE: 0.031714 MAE: 0.089985 | val MSE: 0.017081 MAE: 0.054352 | Brzina: 84.3 batch/s | LR: 1.18e-04
+[Batch 22000] -> train MSE: 0.031881 MAE: 0.090941 | val MSE: 0.017006 MAE: 0.054152 | Brzina: 81.7 batch/s | LR: 8.24e-05
+[Batch 23000] -> train MSE: 0.031647 MAE: 0.090569 | val MSE: 0.017040 MAE: 0.054090 | Brzina: 80.3 batch/s | LR: 8.24e-05
+[Batch 24000] -> train MSE: 0.032384 MAE: 0.091735 | val MSE: 0.016949 MAE: 0.054029 | Brzina: 82.9 batch/s | LR: 8.24e-05
+[Batch 25000] -> train MSE: 0.032348 MAE: 0.091537 | val MSE: 0.016929 MAE: 0.053778 | Brzina: 79.6 batch/s | LR: 8.24e-05

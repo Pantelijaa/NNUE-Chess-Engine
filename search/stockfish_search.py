@@ -1,3 +1,4 @@
+import os
 import time
 import chess
 import chess.engine
@@ -13,8 +14,12 @@ class StockfishSearch(ChessSearch):
 
     @classmethod
     def load_stockfish(cls):
+        # U paralelnom turniru svaki proces postavlja STOCKFISH_THREADS=1 da se
+        # izbegne preopterecenje CPU-a (podrazumevano 8 za serijski rezim).
+        threads = int(os.environ.get("STOCKFISH_THREADS", "8"))
+        hash_mb = int(os.environ.get("STOCKFISH_HASH", "64"))
         cls._engine = chess.engine.SimpleEngine.popen_uci(STOCKFISH_PATH)
-        cls._engine.configure({"Threads": 8, "Hash": 256, "EvalFile": "./models/nn-c288c895ea92.nnue"})
+        cls._engine.configure({"Threads": threads, "Hash": hash_mb, "EvalFile": "./models/nn-c288c895ea92.nnue"})
 
     @classmethod
     def close(cls):

@@ -15,6 +15,8 @@ MVV_LVA_BASE = 5_000 # Most Valuable Victim - Least Valuable Attacker
 KILLER_1_SCORE = 800 # Killer potez slot 1
 KILLER_2_SCORE = 700 # Killer potez slot 2
 
+CONTEMPT = 0  # centipawns; >0 makes engine want to play even when draw is currently the best
+
 PIECE_VALUES = {
     chess.PAWN: 100,
     chess.KNIGHT: 320,
@@ -61,6 +63,7 @@ class PVSSearch(ChessSearch):
             except TimeoutError:
                 break
             depth += 1
+
         self.time_elapsed = time.time() - start
         return best_move
 
@@ -70,6 +73,9 @@ class PVSSearch(ChessSearch):
             raise TimeoutError
         original_alpha = alpha
         if not is_root:
+            if board.is_repetition(2):
+                return -CONTEMPT
+
             current_mate_score = -9999 + state.depth
             alpha = max(alpha, current_mate_score)
             if alpha >= beta:
@@ -114,8 +120,8 @@ class PVSSearch(ChessSearch):
             if is_root and time.time() - start >= self.time_limit:
                 raise TimeoutError
 
-            board.push(move)
             next_state = state.make_child()
+            board.push(move)
             try:
                 if first:
                     score = -self._pvs(next_state, depth - 1, -beta, -alpha, start, board)
@@ -124,7 +130,7 @@ class PVSSearch(ChessSearch):
                     score = -self._pvs(next_state, depth - 1, -alpha - 1, -alpha, start, board)
                     self.null_windows += 1
                     if alpha < score < beta:
-                        score = -self._pvs(next_state, depth - 1, -beta, -alpha, start, board)
+                        score = -self._pvs(next_state, depth - 1, -beta, -score, start, board)
             finally:
                 board.pop()
 
@@ -164,8 +170,8 @@ class PVSSearch(ChessSearch):
 
         moves = board.legal_moves if in_check else board.generate_legal_moves(chess.BB_ALL, board.occupied_co[not board.turn])
         for move in moves:
-            board.push(move)
             next_state = state.make_child()
+            board.push(move)
             try:
                 score = -self._quiescence(next_state, -beta, -alpha, start, board)
             finally:

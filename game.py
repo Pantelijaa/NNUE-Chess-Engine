@@ -3,11 +3,6 @@ from game_result import GameResult
 
 
 class Game:
-    """
-    Upravlja jednom partijom izmedju dva agenta.
-    Analogno RobotGame.do_search() iz robot projekta.
-    """
-
     MAX_MOVES = 200  # maksimalan broj polupoteza pre prisilnog remija
 
     def play(
@@ -57,7 +52,6 @@ class Game:
             board.push(move)
             move_count += 1
 
-            # Obavesti GUI ili bilo kojeg posmatraca o novom potezu
             if move_callback:
                 move_callback(board, move)
 
