@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Callable, Optional
 
 from search import PVSSearch, MCTSSearch, StockfishSearch
-from state import HandCraftedState, StockfishState, NNUEState, make_stockfish_state
+from state import HandCraftedState, StockfishState, NNUEState, make_stockfish_state, make_nnue_state
 from game import Game
 from game_result import GameResult
 
@@ -13,20 +13,32 @@ StockfishPretrained = make_stockfish_state(
     "./models/nn-c288c895ea92.nnue"
 )
 
-StockfishTrained = make_stockfish_state(
+StockfishTrained10E = make_stockfish_state(
     "./utils/easy_train_data/experiments/experiment_test/stockfish_base/src/stockfish.exe",
-    "./models/model.nnue",
+    "./models/model10.nnue",
 )
 
+StockfishTrained20E = make_stockfish_state(
+    "./utils/easy_train_data/experiments/experiment_test/stockfish_base/src/stockfish.exe",
+    "./models/model20.nnue",
+)
+
+# NNUE mreze -- stride MORA da odgovara onome sa kojim je mreza trenirana.
+NNUE512 = make_nnue_state("./models/nnue_e4_b18000_mse0.016716.pt", stride=512)
+NNUE641 = make_nnue_state("./models/nnue_e2_b32000_mse0.025056.pt", stride=641)
+
+
 agent_map = {
+    "Agent 1": (PVSSearch, HandCraftedState),
+    "Agent 2(random)": (MCTSSearch, None),
+    "Agent 2(eval)": (MCTSSearch, HandCraftedState),
+    "Agent 2(nnue)": (MCTSSearch, NNUE512),
+    "Agent 3(512S)": (PVSSearch, NNUE512),
+    "Agent 3(641S)": (PVSSearch, NNUE641),
+    "Agent 4(10E)": (PVSSearch, StockfishTrained10E),
+    "Agent 4(20E)": (PVSSearch, StockfishTrained20E),
+    "Agent 5": (PVSSearch, StockfishPretrained),
     "Stockfish": (StockfishSearch, None),
-    "PVSPretrainedStockfish": (PVSSearch, StockfishPretrained),
-    "NNUE": (PVSSearch, NNUEState),
-    "PVSStockfish": (PVSSearch, StockfishTrained),
-    "Handcrafted": (PVSSearch, HandCraftedState),
-    "MCTS_nnue": (MCTSSearch, NNUEState),
-    "MCTS_eval": (MCTSSearch, HandCraftedState),
-    "MCTS_random": (MCTSSearch, None),
 }
 
 class Matchmaker:

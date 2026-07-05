@@ -32,7 +32,7 @@ def table_to_tensors(table):
     stm = torch.from_numpy(table.column("stm").combine_chunks().to_numpy(zero_copy_only=False).astype(np.float32))
     return w_flat, w_off, b_flat, b_off, cp, stm
 
-def load_val_sample(parquet_path, num_rows, num_groups=16, seed=42):
+def load_val_sample(parquet_path, num_rows, num_groups=16, seed=0):
     """Representative fixed val set: sample rows from row-groups spread across the
     whole shard (not the first contiguous rows, which are a narrow biased slice)."""
     pf = pq.ParquetFile(parquet_path)

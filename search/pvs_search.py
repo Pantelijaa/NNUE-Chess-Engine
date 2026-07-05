@@ -158,6 +158,7 @@ class PVSSearch(ChessSearch):
         return (best_score, best_move) if is_root else best_score
 
     def _quiescence(self, state, alpha: float, beta: float, start: float, board: chess.Board) -> float:
+        self.nodes_visited += 1
         if time.time() - start >= self.time_limit:
             raise TimeoutError
 

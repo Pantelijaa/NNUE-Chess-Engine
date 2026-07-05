@@ -45,7 +45,6 @@ def _validate(model, val_batch, criterion):
 def train_nnue(model, dataset_path, epochs=10, batch_size=8192, lr=1e-3, print_freq=1000):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
-    #torch.set_float32_matmul_precision("high")
     model.to(device)
     model.train()
 
@@ -64,8 +63,8 @@ def train_nnue(model, dataset_path, epochs=10, batch_size=8192, lr=1e-3, print_f
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.7,
-        patience=10,
+        optimizer, mode='min', factor=0.5,
+        patience=8,
         threshold=1e-4,
         cooldown=3,
         min_lr=1e-6,

@@ -2,6 +2,7 @@ import chess
 import numpy as np
 
 NUM_FEATURES = 41024
+KING_STRIDE = NUM_FEATURES // 64   # 641 -- blok po polju kralja (10 tipova figura * 64 + 1)
 
 def get_piece_offset(piece: chess.Piece, is_black_perspective: bool) -> int:
     p_color = piece.color
@@ -11,7 +12,7 @@ def get_piece_offset(piece: chess.Piece, is_black_perspective: bool) -> int:
     return (color_offset + (piece.piece_type - 1)) * 64
 
 
-def get_halfkp_indices(board: chess.Board):
+def get_halfkp_indices(board: chess.Board, stride: int = KING_STRIDE):
     wk = board.king(chess.WHITE)
     bk = board.king(chess.BLACK)
     if wk is None or bk is None:
@@ -23,15 +24,15 @@ def get_halfkp_indices(board: chess.Board):
     for sq, piece in board.piece_map().items():
         if piece.piece_type == chess.KING:
             continue
-        w_idx.append(wk * 512 + get_piece_offset(piece, False) + sq)
-        b_idx.append(bk_f * 512 + get_piece_offset(piece, True) + chess.square_mirror(sq))
+        w_idx.append(wk * stride + get_piece_offset(piece, False) + sq)
+        b_idx.append(bk_f * stride + get_piece_offset(piece, True) + chess.square_mirror(sq))
     return w_idx, b_idx
 
 
 class NNUEInference:
     """
     All network weights as numpy arrays + a fast forward pass.
-    The result is the side-to-move-relative score normalised to ~[-1, 1].
+    The result is the side-to-move-relative score normalized to ~[-1, 1].
     """
 
     def __init__(self):
@@ -90,14 +91,15 @@ class Accumulator:
     Ideally should be incrementally updated but in python that is actually slower
     """
 
-    def __init__(self, net: NNUEInference):
+    def __init__(self, net: NNUEInference, stride: int = KING_STRIDE):
         self.net = net
+        self.stride = stride
         self.white = net.ft_bias.copy()
         self.black = net.ft_bias.copy()
 
     def refresh(self, board: chess.Board):
         net = self.net
-        res = get_halfkp_indices(board)
+        res = get_halfkp_indices(board, self.stride)
         if res is None:
             self.white = net.ft_bias.copy()
             self.black = net.ft_bias.copy()

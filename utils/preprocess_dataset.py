@@ -53,10 +53,10 @@ def process_file(parquet_path, output_dir):
     total = 0
     parquet_file = pq.ParquetFile(parquet_path)
 
-    with Pool(cpu_count()) as pool:
-        for batch in parquet_file.iter_batches(batch_size=40000, columns=["fen", "cp", "mate"]):
+    with Pool(14) as pool:
+        for batch in parquet_file.iter_batches(batch_size=15000, columns=["fen", "cp", "mate"]):
             df = batch.to_pandas()
-            sub_batches = [df[i:i + 2000].to_dict('list') for i in range(0, len(df), 2000)]
+            sub_batches = [df[i:i + 1500].to_dict('list') for i in range(0, len(df), 1500)]
 
             results = pool.map(process_batch, sub_batches)
             all_rows = [row for result in results for row in result]

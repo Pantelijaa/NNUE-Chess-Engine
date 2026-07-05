@@ -48,7 +48,7 @@ if __name__ == '__main__':
     parser.add_argument("--mode", type=str, required=True, help="Which main function to run")
     parser.add_argument("--time-limit", type=float, default=1.0,
                         help="Vremenski budzet po potezu u sekundama (tournament mode)")
-    parser.add_argument("--games-per-side", type=int, default=2,
+    parser.add_argument("--games-per-side", type=int, default=10,
                         help="Broj partija po strani za svaki par (tournament mode)")
     parser.add_argument("--workers", type=int, default=1,
                         help="Broj paralelnih procesa (>1 ukljucuje paralelni turnir)")

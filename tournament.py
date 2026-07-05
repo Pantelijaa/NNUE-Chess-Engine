@@ -15,14 +15,16 @@ from matchmaker import Matchmaker, agent_map
 from game_result import GameResult
 
 tournament_map = [
-    ("Stockfish", "PVSPretrainedStockfish"), # Stock vs Stock + PVS
-    ("PVSPretrainedStockfish", "PVSStockfish"), # Stock + PVS vs Stock + PVS + train
-    ("NNUE", "PVSPretrainedStockfish"),
-    ("NNUE", "PVSStockfish"),
-    ("NNUE", "Handcrafted"),
-    ("Handcrafted", "MCTS_nnue"),
-    ("MCTS_nnue", "MCTS_eval"),
-    ("MCTS_eval", "MCTS_random"),
+    ("Stockfish", "Agent 5"), # Stock vs Stock + PVS
+    ("Agent 4(20E)", "Agent 4(10E)"),
+    ("Agent 5", "Agent 4(20E)"), # Stock + PVS vs Stock + PVS + train
+    ("Agent 3(641S)", "Agent 3(512S)"),
+    ("Agent 3(512S)", "Agent 5"),
+    ("Agent 3(512S)", "Agent 4(10E)"),
+    ("Agent 3(512S)", "Agent 1"),
+    ("Agent 1", "Agent 2(nnue)"),
+    ("Agent 2(nnue)", "Agent 2(eval)"),
+    ("Agent 2(eval)", "Agent 2(random)"),
 ]
 
 

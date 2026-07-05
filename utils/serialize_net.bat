@@ -19,7 +19,7 @@ set "TORCHDYNAMO_DISABLE=1"
 cd /d "%NP%"
 
 set "CKPT=%~1"
-if "%CKPT%"=="" set "CKPT=training_out\lightning_logs\version_2\checkpoints\last.ckpt"
+if "%CKPT%"=="" set "CKPT=training_out\lightning_logs\version_4\checkpoints\last.ckpt"
 
 set "OUT=%~2"
 if "%OUT%"=="" set "OUT=training_out\model.nnue"

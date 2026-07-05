@@ -28,7 +28,7 @@ cd /d "%NP%"
     --seed 42 ^
     --epoch-size 100000000 ^
     --validation-size 1000000 ^
-    --network-save-period 1 ^
+    --network-save-period 10 ^
     --save-last-network True ^
     --default-root-dir "%NP%\training_out"
 
