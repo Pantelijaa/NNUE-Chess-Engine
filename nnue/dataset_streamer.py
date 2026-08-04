@@ -11,9 +11,8 @@ _COLS = ["w_indices", "b_indices", "cp", "stm"]
 
 
 def _embedding_input(col):
-    """T
-    urn an Arrow list<int> column into EmbeddingBag (flat_values, offsets).
-    Arrow already stores a list column as a flat child buffer + offsets, which isexactly EmbeddingBag's input format
+    """Turn an Arrow list<int> column into EmbeddingBag (flat_values, offsets).
+    Arrow already stores a list column as a flat child buffer + offsets, which is exactly EmbeddingBag's input format
     """
     arr = col.combine_chunks()                       # ChunkedArray -> ListArray
     offsets = arr.offsets.to_numpy()                 # int32, length n+1
